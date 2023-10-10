@@ -1,0 +1,22 @@
+run_name: oc20-gnoc-scale10
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/regress
+
+resume_path: null
+resume_config: null
+
+pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1009_0252/checkpoint.pt
+model_config: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1009_0252/clip.yml
+
+device: cuda
+num_epochs: 30
+early_stop_threshold: 6
+batch_size: 32
+lr: 1.0e-5
+warmup_steps: 0
+optimizer: AdamW #gLLRD # AdamW, gLLRD
+scheduler: reduceLR
+loss_fn: MSELoss
+log_interval: 10
+debug: False

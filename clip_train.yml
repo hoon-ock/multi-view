@@ -1,0 +1,17 @@
+run_name: debug #resume-oc20 #"debug" for debugging
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip
+
+pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1007_2057/checkpoint.pt
+model_config: model/clip.yml
+
+device: cuda
+num_epochs: 50 
+early_stop_threshold: 5  
+batch_size: 32  
+lr: 1.0e-5 
+optimizer: AdamW
+warmup_steps: 0  
+scheduler: reduceLR  # Scheduler type: reduceLR, linear, constant, etc
+gnn_emb: gnoc_emb # gnoc_emb for gemnet-oc, eq_emb for eqv2
