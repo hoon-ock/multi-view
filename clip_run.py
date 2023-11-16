@@ -53,7 +53,8 @@ def update_projection_dim(train_config_file):
         except yaml.YAMLError as exc:
             print(exc)    
 
-def train_fn(data_loader, model, optimizer, device, scheduler, run_name):
+def train_fn(data_loader, model, optimizer, device, 
+             scheduler, log_interval, debug=False):
     model.train()                               # Put the model in training mode.                   
     lr_list = []
     train_losses = []
@@ -78,7 +79,8 @@ def train_fn(data_loader, model, optimizer, device, scheduler, run_name):
         #         wandb.log({"train_loss": loss.item(), 
         #                    "lr": optimizer.param_groups[0]["lr"]}, 
         #                    step = batch_iteration)
-
+        if (batch_iteration != 0) and (batch_iteration % log_interval == 0) and (debug == False):
+            wandb.log({"iter_train_loss": loss.item()}) 
         if not isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
             scheduler.step()                        # To update learning rate.    
 
@@ -88,13 +90,13 @@ def train_fn(data_loader, model, optimizer, device, scheduler, run_name):
 
 
 
-def validate_fn(data_loader, model, device, run_name):  
+def validate_fn(data_loader, model, device):  
     model.eval()                                    # Put model in evaluation mode.
     val_losses = []
 
     print('validating...')
 
-    batch_iteration = 0
+    # batch_iteration = 0
     with torch.no_grad():                           # Disable gradient calculation.
         for batch in tqdm(data_loader):                   # Loop over all batches.   
             batch = {k: v.to(device) for k, v in batch.items()}
@@ -131,8 +133,11 @@ def run_clip(config_file):
     WRMUP = config["warmup_steps"] if config.get("warmup_steps") else 0 # warmup step for scheduler
     OPTIM = config["optimizer"] if config.get("optimizer") else "AdamW" # optimizer type
     SCHD = config["scheduler"] if config.get("scheduler") else "reduceLR" # scheduler type
+    LOG_INTERVAL = config["log_interval"] if config.get("log_interval") else 10 # log interval
+    PATIENCE = config["patience"] if config.get("patience") else 3 # patience for scheduler
     GNN_EMB = config['gnn_emb']
-    if "debug" in RUN_NAME:
+    DEBUG = config["debug"] if config.get("debug") else False
+    if DEBUG:
         DEVICE = "cpu"
 
 
@@ -147,13 +152,15 @@ def run_clip(config_file):
     print(f"Warmup steps: {WRMUP}")
     print(f"Optimizer: {OPTIM}")
     print(f"Scheduler: {SCHD}")
+    if PT_CKPT_PATH:
+        print(f"Pretrained checkpoint path: {PT_CKPT_PATH}")
     print("=============================================================")
-    if "debug" not in RUN_NAME:
+    if not DEBUG:
         wandb.init(project="clip", name=RUN_NAME) 
                    #,dir='/home/jovyan/shared-scratch/jhoon/ocp2023/log')
         
     # ========================= COPY CONFIG FILE ==============================
-    if "debug" not in RUN_NAME:
+    if not DEBUG:
         if not os.path.exists(CKPT_SAVE_DIR):
             os.makedirs(CKPT_SAVE_DIR)
         shutil.copyfile(config_file, os.path.join(CKPT_SAVE_DIR, config_file.split("/")[-1]))
@@ -206,7 +213,7 @@ def run_clip(config_file):
         optimizer, _ = roberta_base_AdamW_grouped_LLRD(model, LR)
 
     if SCHD == "reduceLR":
-        scheduler = ReduceLROnPlateau(optimizer, 'min', patience=5)
+        scheduler = ReduceLROnPlateau(optimizer, 'min', patience=PATIENCE)
     
     
     else:
@@ -228,14 +235,20 @@ def run_clip(config_file):
     early_stopping_counter = 0       
     for epoch in range(1, EPOCHS+1):
         # Call the train function and get the training loss
-        train_loss, lr = train_fn(train_data_loader, model, optimizer, DEVICE, scheduler, RUN_NAME)
+        train_loss, lr = train_fn(train_data_loader, 
+                                  model, 
+                                  optimizer, 
+                                  DEVICE, 
+                                  scheduler, 
+                                  LOG_INTERVAL, 
+                                  DEBUG)
         
         # Perform validation and get the validation loss
-        val_loss = validate_fn(val_data_loader, model, DEVICE, RUN_NAME)
+        val_loss = validate_fn(val_data_loader, model, DEVICE)
         if SCHD == 'reduceLR':
             scheduler.step(val_loss)
         loss = val_loss
-        if "debug" not in RUN_NAME:
+        if not DEBUG:
             wandb.log({"train_loss": train_loss, "val_loss": val_loss, 'lr': lr})
         # If there's improvement on the validation loss, save the model checkpoint.
         # Else do early stopping if threshold is reached.
@@ -252,7 +265,7 @@ def run_clip(config_file):
             break
 
     print(f"===== Training Termination =====")
-    if "debug" not in RUN_NAME:        
+    if not DEBUG:       
         wandb.finish()
 
 

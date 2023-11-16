@@ -73,11 +73,11 @@ class TextEncoder(torch.nn.Module):
         tokens_embed = self.token_embedding(batch["input_ids"]) # [batch_size, seq_len, hidden_size]
         chg_embed = self.chg_embedding(batch["chg_embed"]) 
 
-        # tokens_embed = normalize_tensor(tokens_embed)
-        # chg_embed = normalize_tensor(chg_embed)
+        tokens_embed = normalize_tensor(tokens_embed)
+        chg_embed = normalize_tensor(chg_embed)
 
-        # initial_embeddings =  tokens_embed + chg_embed.unsqueeze(1) #/10
-        initial_embeddings =  tokens_embed + chg_embed.unsqueeze(1)/10
+        initial_embeddings =  tokens_embed + chg_embed.unsqueeze(1) #/10
+        # initial_embeddings =  tokens_embed # + chg_embed.unsqueeze(1)/10
         # breakpoint()
         outputs = self.transformer(attention_mask = batch["attention_mask"], 
                                     inputs_embeds = initial_embeddings)

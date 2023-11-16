@@ -1,16 +1,18 @@
-run_name: oc20-gnoc-scale10
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+run_name: combined-eqv2-chgnet-norm
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_train_relaxed.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_val_relaxed.pkl
 ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/regress
 
 resume_path: null
 resume_config: null
 
-pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1009_0252/checkpoint.pt
-model_config: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1009_0252/clip.yml
+pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/checkpoint.pt
+ #oc20-eqv2_chgnet-norm_1012_2342/checkpoint.pt
+model_config: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/clip.yml
+ #oc20-eqv2_chgnet-norm_1012_2342/clip.yml
 
 device: cuda
-num_epochs: 30
+num_epochs: 50
 early_stop_threshold: 6
 batch_size: 32
 lr: 1.0e-5

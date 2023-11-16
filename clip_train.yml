@@ -1,17 +1,20 @@
-run_name: debug #resume-oc20 #"debug" for debugging
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+run_name: combined-eqv2_chgnet-norm #resume-oc20 #"debug" for debugging
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_train_relaxed.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_val_relaxed.pkl
 ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip
 
-pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/resume-oc20_1007_2057/checkpoint.pt
+pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/oc20-eqv2_chgnet-norm_1012_2342/checkpoint.pt 
 model_config: model/clip.yml
 
 device: cuda
 num_epochs: 50 
-early_stop_threshold: 5  
+early_stop_threshold: 4  
 batch_size: 32  
 lr: 1.0e-5 
 optimizer: AdamW
 warmup_steps: 0  
 scheduler: reduceLR  # Scheduler type: reduceLR, linear, constant, etc
-gnn_emb: gnoc_emb # gnoc_emb for gemnet-oc, eq_emb for eqv2
+log_interval: 10
+patience: 3
+gnn_emb: eq_emb # gnoc_emb for gemnet-oc, eq_emb for eqv2
+debug: False

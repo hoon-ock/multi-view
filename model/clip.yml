@@ -6,7 +6,7 @@ Path:
   pretrain_ckpt: /home/jovyan/CATBERT/checkpoint/finetune/2nd-int--ft_0802_2121/checkpoint.pt
 ProjectionConfig:
   dropout_rate: 0.1
-  projection_dim: 256
+  projection_dim: 3200
 RobertaConfig:
   architectures:
   - RobertaForMaskedLM
