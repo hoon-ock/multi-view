@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import os, yaml, pickle
 from transformers import RobertaTokenizerFast
+import tqdm
 # Import your RegressionModel class, train_fn, and any other necessary modules
 
 # Define a function for making predictions
@@ -14,7 +15,7 @@ def predict_fn(data_loader, model, device):
     predictions = []
 
     with torch.no_grad():  # Disable gradient calculation.
-        for batch in data_loader:
+        for batch in tqdm.tqdm(data_loader):
             batch = {k: v.to(device) for k, v in batch.items()}
             outputs = model(batch).squeeze(-1)
             predictions.extend(outputs.cpu().numpy())  # Store predictions as numpy arrays
@@ -68,6 +69,7 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # ===================== MODEL and TOKENIZER ===============================
     with open(model_config_path, "r") as f:
         model_config = yaml.safe_load(f)
+    
     model = RegressionModel(model_config).to(device)
     
 
@@ -98,14 +100,20 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, choices=["gnoc", "escn", "scn", "eqv2"], default="eqv2")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--ckpt", type=str, default=None)
+    parser.add_argument("--train_type", type=str, choices=["direct_regress", "clip_regress"], default="clip_regress")
+    # parser.add_argument("--data_path", type=str, default=None)    
+    # parser.add_argument("--pt_ckpt_dir_path", type=str, default=None)
+    # parser.add_argument("--save_path", type=str, default=None)
+
     args = parser.parse_args()
     split = args.split
     model = args.model
     ckpt = args.ckpt
+    train_type = args.train_type
     debug = args.debug
     # Conduct prediction
     data_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_{split}_{model}_relaxed.pkl"
-    pt_ckpt_dir_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/regress/{ckpt}"
+    pt_ckpt_dir_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/{train_type}/{ckpt}"
     save_path = "/home/jovyan/shared-scratch/jhoon/ocp2023/results/predictions" 
     tag = f"{split}-{model}"
     print("=============================================================")

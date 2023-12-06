@@ -136,6 +136,7 @@ def run_regression(config_file):
     RESUME_CONFIG = config["resume_config"] if config.get("resume_config") else None
 
     PT_CKPT_PATH = config["pt_ckpt_path"] if config.get("pt_ckpt_path") else None
+    # CATBERTA_CKPT_PATH = config["catberta_ckpt_path"] if config.get("catberta_ckpt_path") else None
     MODEL_CONFIG = config["model_config"]
     ############################################################################
     DEVICE = config["device"]
@@ -225,6 +226,13 @@ def run_regression(config_file):
         print('resume training from ', RESUME_PATH)
         state_dict = torch.load(RESUME_PATH, map_location=DEVICE)
         model.load_state_dict(state_dict)
+
+    # elif CATBERTA_CKPT_PATH:
+    #     print('loading pretrained catberta from')
+    #     print(CATBERTA_CKPT_PATH)
+    #     breakpoint()
+    #     state_dict = torch.load(CATBERTA_CKPT_PATH, map_location=DEVICE)
+
 
         
     # if "debug" not in RUN_NAME:

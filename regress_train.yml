@@ -1,14 +1,15 @@
-run_name: combined-eqv2-chgnet-norm
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_train_relaxed.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_val_relaxed.pkl
-ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/regress
+run_name: oc20-catberta-chgnet-norm-from-ckpt #combined-eqv2-chgnet-norm
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/direct_regress
 
 resume_path: null
 resume_config: null
 
-pt_ckpt_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/checkpoint.pt
+pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/checkpoint.pt
  #oc20-eqv2_chgnet-norm_1012_2342/checkpoint.pt
-model_config: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/clip.yml
+# catberta_ckpt_path: /home/jovyan/CATBERT/checkpoint/finetune/2nd-int--ft_0802_2121/checkpoint.pt
+model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/clip.yml
  #oc20-eqv2_chgnet-norm_1012_2342/clip.yml
 
 device: cuda

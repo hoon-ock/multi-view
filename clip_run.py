@@ -136,6 +136,7 @@ def run_clip(config_file):
     LOG_INTERVAL = config["log_interval"] if config.get("log_interval") else 10 # log interval
     PATIENCE = config["patience"] if config.get("patience") else 3 # patience for scheduler
     GNN_EMB = config['gnn_emb']
+    CHG_EMB = config['chg_emb']
     DEBUG = config["debug"] if config.get("debug") else False
     if DEBUG:
         DEVICE = "cpu"
@@ -176,14 +177,14 @@ def run_clip(config_file):
     # Initialize training dataset
     train_dataset = ClipDataset(texts = df_train["text"].values,
                               targets = df_train["target"].values,
-                              chg_emb = df_train["chg_emb"].values,
+                              chg_emb = df_train["chg_emb"].values, # if CHGNET_EMB else None,
                               graph_emb = df_train[GNN_EMB].values,
                               tokenizer = tokenizer,
                               seq_len= tokenizer.model_max_length)
     # Initialize validation dataset
     val_dataset = ClipDataset(texts = df_val["text"].values,
                             targets = df_val["target"].values,
-                            chg_emb = df_val["chg_emb"].values,
+                            chg_emb = df_val["chg_emb"].values, # if CHGNET_EMB else None,
                             graph_emb = df_val[GNN_EMB].values,
                             tokenizer = tokenizer,
                             seq_len= tokenizer.model_max_length)
@@ -197,6 +198,8 @@ def run_clip(config_file):
     # ===================== MODEL and TOKENIZER ===============================
     with open(MODEL_CONFIG, "r") as f:
         model_config = yaml.safe_load(f)
+    model_config['CHG_EMB_TAG'] = CHG_EMB
+    # breakpoint()
     model = CLIPModel(model_config).to(DEVICE)
     if PT_CKPT_PATH:
         print('loading pretrained model from')

@@ -19,14 +19,15 @@ def normalize_tensor(input_tensor):
 class TextEncoder(torch.nn.Module):
     def __init__(self,config):
         super().__init__()
-        # breakpoint()
         self.pretrain_ckpt_path = config['Path']['pretrain_ckpt']
         self.hidden_size = config['RobertaConfig']['hidden_size'] # 768 for roberta
         self.num_attention_heads = config['RobertaConfig']['num_attention_heads']                 
         self.num_hidden_layers = config['RobertaConfig']['num_hidden_layers'] ## Encoder layers
         self.vocab_size = config['RobertaConfig']['vocab_size']
         self.max_position_embeddings = config['RobertaConfig']['max_position_embeddings']
+        #self.emb_tagging = config['CHGConfig']['emb_tagging'] if config['CHGConfig']['emb_tagging'] else False
         self.num_chg_dim = config['CHGConfig']['num_chg_dim']       
+        self.emb_tagging = config['CHGConfig']["emb_tagging"] #config['CHG_EMB_TAG']
         #self.output_dim = config['RegressorConfig']['output_dim']
         self.chg_embedding = nn.Linear(self.num_chg_dim, self.hidden_size) ## num_chg_dims = 64
 
@@ -71,14 +72,17 @@ class TextEncoder(torch.nn.Module):
         torch.Tensor: The model's output tensor.
         """
         tokens_embed = self.token_embedding(batch["input_ids"]) # [batch_size, seq_len, hidden_size]
-        chg_embed = self.chg_embedding(batch["chg_embed"]) 
-
-        tokens_embed = normalize_tensor(tokens_embed)
-        chg_embed = normalize_tensor(chg_embed)
-
-        initial_embeddings =  tokens_embed + chg_embed.unsqueeze(1) #/10
+        if self.emb_tagging:
+            chg_embed = self.chg_embedding(batch["chg_embed"]) 
+            tokens_embed = normalize_tensor(tokens_embed)
+            chg_embed = normalize_tensor(chg_embed)
+            initial_embeddings =  tokens_embed + chg_embed.unsqueeze(1) #/10
         # initial_embeddings =  tokens_embed # + chg_embed.unsqueeze(1)/10
-        # breakpoint()
+            # breakpoint()
+        else:
+            initial_embeddings = tokens_embed
+            # breakpoint()
+        
         outputs = self.transformer(attention_mask = batch["attention_mask"], 
                                     inputs_embeds = initial_embeddings)
         logits = outputs.last_hidden_state[:, 0, :]
