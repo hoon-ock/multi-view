@@ -136,7 +136,7 @@ def run_clip(config_file):
     LOG_INTERVAL = config["log_interval"] if config.get("log_interval") else 10 # log interval
     PATIENCE = config["patience"] if config.get("patience") else 3 # patience for scheduler
     GNN_EMB = config['gnn_emb']
-    CHG_EMB = config['chg_emb']
+    # CHG_EMB = config['chg_emb']
     DEBUG = config["debug"] if config.get("debug") else False
     if DEBUG:
         DEVICE = "cpu"
@@ -198,7 +198,7 @@ def run_clip(config_file):
     # ===================== MODEL and TOKENIZER ===============================
     with open(MODEL_CONFIG, "r") as f:
         model_config = yaml.safe_load(f)
-    model_config['CHG_EMB_TAG'] = CHG_EMB
+    # model_config['CHG_EMB_TAG'] = CHG_EMB
     # breakpoint()
     model = CLIPModel(model_config).to(DEVICE)
     if PT_CKPT_PATH:
