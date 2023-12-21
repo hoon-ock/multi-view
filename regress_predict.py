@@ -70,10 +70,15 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # ===================== MODEL and TOKENIZER ===============================
     with open(model_config_path, "r") as f:
         model_config = yaml.safe_load(f)
-
+    # for prediction we don't need to do charge embedding broadcasting
+    if model_config['CHGConfig']['emb_tagging']:
+        print("emb_tagging is set to False for prediction")
+        model_config['CHGConfig']['emb_tagging'] = False
+    
     with open(train_config_path, "r") as f:
         train_config = yaml.safe_load(f)
     head = train_config["head"]
+
     if head == "pooler":
         model = RegressionModel2(model_config).to(device)
     else:
