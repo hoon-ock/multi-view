@@ -8,7 +8,7 @@ from tqdm import tqdm
 from torch.optim.lr_scheduler import ReduceLROnPlateau
 from utils import roberta_base_AdamW_grouped_LLRD
 import yaml, os, shutil
-from model.models import RegressionModel
+from model.models import RegressionModel, RegressionModel2
 from transformers import RobertaTokenizerFast
 from datetime import datetime
 import torch.nn as nn
@@ -139,6 +139,7 @@ def run_regression(config_file):
     # CATBERTA_CKPT_PATH = config["catberta_ckpt_path"] if config.get("catberta_ckpt_path") else None
     MODEL_CONFIG = config["model_config"]
     ############################################################################
+    HEAD = config["head"] if config.get("head") else "regress"
     DEVICE = config["device"]
     EPOCHS = config["num_epochs"]
     EARLY_STOP_THRESHOLD = config["early_stop_threshold"]  # Set the early stopping threshold    
@@ -160,6 +161,7 @@ def run_regression(config_file):
     print("=============================================================")
     print(f"{RUN_NAME} is launched")
     print("=============================================================")
+    print(f"Head: {HEAD}")
     print(f"Epochs: {EPOCHS}")
     print(f"Early stopping threshold: {EARLY_STOP_THRESHOLD}")
     print(f"Training batch size: {TRAIN_BS}")
@@ -214,7 +216,11 @@ def run_regression(config_file):
     # ===================== MODEL and TOKENIZER ===============================
     with open(MODEL_CONFIG, "r") as f:
         model_config = yaml.safe_load(f)
-    model = RegressionModel(model_config).to(DEVICE)
+
+    if HEAD == "pooler":
+        model = RegressionModel2(model_config).to(DEVICE)
+    else:
+        model = RegressionModel(model_config).to(DEVICE)
     
     if PT_CKPT_PATH:
         print('loading pretrained text encoder and projection layer from')
@@ -224,8 +230,9 @@ def run_regression(config_file):
    
     elif RESUME_PATH:
         print('resume training from ', RESUME_PATH)
-        state_dict = torch.load(RESUME_PATH, map_location=DEVICE)
-        model.load_state_dict(state_dict)
+        state_dict = torch.load(RESUME_PATH, map_location=DEVICE)['model_state_dict']
+        # breakpoint()
+        model.load_state_dict(state_dict, strict=False)
 
     # elif CATBERTA_CKPT_PATH:
     #     print('loading pretrained catberta from')

@@ -1,10 +1,10 @@
-run_name: ssl-oc20-eqv2 #resume-oc20 #"debug" for debugging
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
+run_name: ssl-combined-dist #resume-oc20 #"debug" for debugging
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_oc20dense_train_dist.pkl
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_dist.pkl
 ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl
 
-pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/oc20-eqv2_chgnet-norm_1012_2342/checkpoint.pt 
-model_config: model/clip.yml
+pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-eqv2_1207_1531/checkpoint.pt 
+model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-eqv2_1207_1531/clip.yml #model/clip.yml
 
 device: cuda
 num_epochs: 50 

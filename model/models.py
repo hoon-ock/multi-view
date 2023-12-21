@@ -52,7 +52,6 @@ def cross_entropy(preds, targets, reduction='none'):
     elif reduction == "mean":
         return loss.mean()
     
-
 class RegressionModel(nn.Module):
     def __init__(self, config):
         super().__init__()
@@ -61,7 +60,6 @@ class RegressionModel(nn.Module):
         self.text_projection = ProjectionHead(config)
         self.regressor = RegressionHead(config)
         self._initialize_weights(self.regressor)
-
     def _initialize_weights(self, module):
         for m in module.modules():
             if isinstance(m, nn.Linear):
@@ -73,4 +71,34 @@ class RegressionModel(nn.Module):
         output = self.text_encoder(batch)
         output = self.text_projection(output)
         output = self.regressor(output)
+        return output
+
+class RegressionModel2(nn.Module):
+    def __init__(self, config):
+        super().__init__()
+
+        self.text_encoder = TextEncoder(config)
+        # self.text_projection = ProjectionHead(config)
+        # self.regressor = RegressionHead(config)
+        self.dense = nn.Linear(config['RobertaConfig']['hidden_size'],
+                               config['RobertaConfig']['hidden_size'])
+        self.activation = nn.Tanh()
+        self.regresshead = nn.Linear(config['RobertaConfig']['hidden_size'], 1) 
+        # self._initialize_weights(self.regressor)
+        self._initialize_weights(self.regresshead)
+
+    def _initialize_weights(self, module):
+        for m in module.modules():
+            if isinstance(m, nn.Linear):
+                torch.nn.init.xavier_uniform_(m.weight)
+                if m.bias is not None:
+                    torch.nn.init.zeros_(m.bias)
+
+    def forward(self, batch):
+        output = self.text_encoder(batch)
+        # ========= pooler layer ===========
+        output = self.dense(output)
+        output = self.activation(output)
+        # ==================================
+        output = self.regresshead(output)
         return output

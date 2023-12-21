@@ -1,10 +1,10 @@
 CHGConfig:
+  emb_tagging: false
   num_chg_dim: 64
-  emb_tagging: False
 CLIPConfig:
   temperature: 1.0
 Path:
-  pretrain_ckpt: /home/jovyan/CATBERT/checkpoint/finetune/2nd-int--ft_0802_2121/checkpoint.pt
+  pretrain_ckpt: null
 ProjectionConfig:
   dropout_rate: 0.1
   projection_dim: 3200

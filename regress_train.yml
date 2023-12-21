@@ -1,20 +1,18 @@
-run_name: oc20-catberta-chgnet-norm-from-ckpt #combined-eqv2-chgnet-norm
+run_name: rebase-vanilla-catberta #combined-eqv2-chgnet-norm
 train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_val_relaxed.pkl
-ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/direct_regress
+val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_val_relaxed.pkl
+ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress
 
-resume_path: null
-resume_config: null
+resume_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/checkpoint.pt
+resume_config: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/clip.yml
 
-pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/checkpoint.pt
- #oc20-eqv2_chgnet-norm_1012_2342/checkpoint.pt
-# catberta_ckpt_path: /home/jovyan/CATBERT/checkpoint/finetune/2nd-int--ft_0802_2121/checkpoint.pt
-model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip/combined-eqv2_chgnet-norm_1017_0207/clip.yml
- #oc20-eqv2_chgnet-norm_1012_2342/clip.yml
+pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-dist_1217_1451/checkpoint.pt
+model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-dist_1217_1451/clip.yml
 
+head: pooler
 device: cuda
 num_epochs: 50
-early_stop_threshold: 6
+early_stop_threshold: 5
 batch_size: 32
 lr: 1.0e-5
 warmup_steps: 0

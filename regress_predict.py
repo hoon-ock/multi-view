@@ -1,7 +1,7 @@
 import torch
 from torch.utils.data import DataLoader
 from dataset import RegressionDataset
-from model.models import RegressionModel
+from model.models import RegressionModel, RegressionModel2
 import numpy as np
 import pandas as pd
 import os, yaml, pickle
@@ -34,6 +34,7 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     ckpt_name = pt_ckpt_dir_path.split('/')[-1]
     pt_ckpt_path = os.path.join(pt_ckpt_dir_path, "checkpoint.pt")
     model_config_path = os.path.join(pt_ckpt_dir_path, "clip.yml") #config["model_config"]
+    train_config_path = os.path.join(pt_ckpt_dir_path, "regress_train.yml") #config["train_config"]
     ############################################################################
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if debug:
@@ -69,8 +70,14 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # ===================== MODEL and TOKENIZER ===============================
     with open(model_config_path, "r") as f:
         model_config = yaml.safe_load(f)
-    
-    model = RegressionModel(model_config).to(device)
+
+    with open(train_config_path, "r") as f:
+        train_config = yaml.safe_load(f)
+    head = train_config["head"]
+    if head == "pooler":
+        model = RegressionModel2(model_config).to(device)
+    else:
+        model = RegressionModel(model_config).to(device)
     
 
     print('loading pretrained text encoder and projection layer from')

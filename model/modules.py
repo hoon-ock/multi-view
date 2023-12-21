@@ -31,21 +31,24 @@ class TextEncoder(torch.nn.Module):
         #self.output_dim = config['RegressorConfig']['output_dim']
         self.chg_embedding = nn.Linear(self.num_chg_dim, self.hidden_size) ## num_chg_dims = 64
 
-        if self.pretrain_ckpt_path is not None:
+        # if self.pretrain_ckpt_path is not None:
 
-            roberta_config = RobertaConfig(
-                vocab_size=self.vocab_size,
-                max_position_embeddings=self.max_position_embeddings, 
-                num_attention_heads=self.num_attention_heads,
-                num_hidden_layers= self.num_hidden_layers,
-                hidden_size=self.hidden_size,
-                type_vocab_size=1,
-            )
-            self.transformer = RobertaModel(config=roberta_config)
+        roberta_config = RobertaConfig(
+            vocab_size=self.vocab_size,
+            max_position_embeddings=self.max_position_embeddings, 
+            num_attention_heads=self.num_attention_heads,
+            num_hidden_layers= self.num_hidden_layers,
+            hidden_size=self.hidden_size,
+            type_vocab_size=1,
+        )
+        self.transformer = RobertaModel(config=roberta_config)
+        
+        if self.pretrain_ckpt_path is not None:
+            print('Loading pre-trained weights from', self.pretrain_ckpt_path)
             self.load_pretrained_weights()
         
-        else:
-            self.transformer = RobertaModel.from_pretrained('roberta-base')
+        # else:
+        #     self.transformer = RobertaModel.from_pretrained('roberta-base')
         
         self.token_embedding = self.transformer.embeddings 
         #self.regressor = nn.Linear(self.hidden_size, self.output_dims) 
@@ -56,7 +59,6 @@ class TextEncoder(torch.nn.Module):
         state_dict = torch.load(self.pretrain_ckpt_path)
         
         matching_state_dict = {k.replace('model.', ''): v for k, v in state_dict.items() if k.replace('model.', '') in model_dict}
-
         assert matching_state_dict.keys() == model_dict.keys(), f"Missing keys: {model_dict.keys() - matching_state_dict.keys()}"
         self.transformer.load_state_dict(matching_state_dict, strict=True)
         
