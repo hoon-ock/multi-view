@@ -42,13 +42,13 @@ class TextEncoder(torch.nn.Module):
             type_vocab_size=1,
         )
         self.transformer = RobertaModel(config=roberta_config)
-        
-        if self.pretrain_ckpt_path is not None:
+        # self.transformer = RobertaModel.from_pretrained('roberta-base')
+        if self.pretrain_ckpt_path is not None and self.pretrain_ckpt_path is not 'roberta-base':
             print('Loading pre-trained weights from', self.pretrain_ckpt_path)
             self.load_pretrained_weights()
         
-        # else:
-        #     self.transformer = RobertaModel.from_pretrained('roberta-base')
+        elif self.pretrain_ckpt_path is 'roberta-base':
+            self.transformer = RobertaModel.from_pretrained('roberta-base')
         
         self.token_embedding = self.transformer.embeddings 
         #self.regressor = nn.Linear(self.hidden_size, self.output_dims) 

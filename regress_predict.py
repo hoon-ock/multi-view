@@ -78,14 +78,14 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     with open(train_config_path, "r") as f:
         train_config = yaml.safe_load(f)
     head = train_config["head"]
-
+    # breakpoint()
     if head == "pooler":
         model = RegressionModel2(model_config).to(device)
     else:
         model = RegressionModel(model_config).to(device)
     
 
-    print('loading pretrained text encoder and projection layer from')
+    print('loading pretrained checkpoint from')
     print(ckpt_name)
     state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
     model.load_state_dict(state_dict, strict=True) 

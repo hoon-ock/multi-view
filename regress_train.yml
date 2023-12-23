@@ -1,13 +1,13 @@
-run_name: rebase-vanilla-catberta #combined-eqv2-chgnet-norm
+run_name: rebase3-vanilla-catberta #combined-eqv2-chgnet-norm
 train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
 val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_val_relaxed.pkl
-ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress
+ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/direct_regress
 
 resume_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/checkpoint.pt
 resume_config: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/clip.yml
 
-pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-dist_1217_1451/checkpoint.pt
-model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-combined-dist_1217_1451/clip.yml
+pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-oc20-eqv2_1204_2048/checkpoint.pt
+model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-oc20-eqv2_1204_2048/clip.yml
 
 head: pooler
 device: cuda
