@@ -12,7 +12,7 @@ model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoi
 head: pooler
 device: cuda
 num_epochs: 50
-early_stop_threshold: 5
+early_stop_threshold: 4
 batch_size: 32
 lr: 1.0e-5
 warmup_steps: 0

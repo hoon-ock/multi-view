@@ -251,7 +251,7 @@ def run_regression(config_file):
         optimizer, _ = roberta_base_AdamW_grouped_LLRD(model, LR)
 
     if SCHD == "reduceLR":
-        scheduler = ReduceLROnPlateau(optimizer, 'min', patience=4)
+        scheduler = ReduceLROnPlateau(optimizer, 'min', patience=3)
     else:
         # Calculate the number of training steps (this is used by scheduler).
         # training steps = [number of batches] x [number of epochs].
