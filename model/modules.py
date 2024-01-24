@@ -43,11 +43,12 @@ class TextEncoder(torch.nn.Module):
         )
         self.transformer = RobertaModel(config=roberta_config)
         # self.transformer = RobertaModel.from_pretrained('roberta-base')
-        if self.pretrain_ckpt_path is not None and self.pretrain_ckpt_path is not 'roberta-base':
+        if (self.pretrain_ckpt_path is not None) and (self.pretrain_ckpt_path != 'roberta-base'):
             print('Loading pre-trained weights from', self.pretrain_ckpt_path)
             self.load_pretrained_weights()
         
-        elif self.pretrain_ckpt_path is 'roberta-base':
+        elif self.pretrain_ckpt_path == 'roberta-base':
+            print('Loading roberta-base')
             self.transformer = RobertaModel.from_pretrained('roberta-base')
         
         self.token_embedding = self.transformer.embeddings 
@@ -92,6 +93,68 @@ class TextEncoder(torch.nn.Module):
         # output = self.regressor(pooler)
         return logits
     
+
+class TextEncoder_attn(torch.nn.Module):
+    def __init__(self,config):
+        super().__init__()
+        self.pretrain_ckpt_path = config['Path']['pretrain_ckpt']
+        self.hidden_size = config['RobertaConfig']['hidden_size'] # 768 for roberta
+        self.num_attention_heads = config['RobertaConfig']['num_attention_heads']                 
+        self.num_hidden_layers = config['RobertaConfig']['num_hidden_layers'] ## Encoder layers
+        self.vocab_size = config['RobertaConfig']['vocab_size']
+        self.max_position_embeddings = config['RobertaConfig']['max_position_embeddings']      
+        self.emb_tagging = config['CHGConfig']["emb_tagging"] #config['CHG_EMB_TAG']
+
+        # if self.pretrain_ckpt_path is not None:
+
+        roberta_config = RobertaConfig(
+            vocab_size=self.vocab_size,
+            max_position_embeddings=self.max_position_embeddings, 
+            num_attention_heads=self.num_attention_heads,
+            num_hidden_layers= self.num_hidden_layers,
+            hidden_size=self.hidden_size,
+            type_vocab_size=1,
+        )
+        self.transformer = RobertaModel(config=roberta_config)
+        # self.transformer = RobertaModel.from_pretrained('roberta-base')
+        if (self.pretrain_ckpt_path is not None) and (self.pretrain_ckpt_path != 'roberta-base'):
+            print('Loading pre-trained weights from', self.pretrain_ckpt_path)
+            self.load_pretrained_weights()
+        
+        elif self.pretrain_ckpt_path == 'roberta-base':
+            print('Loading roberta-base')
+            self.transformer = RobertaModel.from_pretrained('roberta-base')
+        
+        self.token_embedding = self.transformer.embeddings 
+
+
+    def load_pretrained_weights(self):
+        model_dict = self.transformer.state_dict()
+        state_dict = torch.load(self.pretrain_ckpt_path)
+        
+        matching_state_dict = {k.replace('model.', ''): v for k, v in state_dict.items() if k.replace('model.', '') in model_dict}
+        assert matching_state_dict.keys() == model_dict.keys(), f"Missing keys: {model_dict.keys() - matching_state_dict.keys()}"
+        self.transformer.load_state_dict(matching_state_dict, strict=True)
+        
+        
+    def forward(self, batch):
+        """
+        Forward pass through the model.
+
+        Parameters:
+        - batch (Dict[str, torch.Tensor]): A dictionary containing input tensors.
+
+        Returns:
+        torch.Tensor: The model's output tensor.
+        """
+        tokens_embed = self.token_embedding(batch["input_ids"]) # [batch_size, seq_len, hidden_size]
+        initial_embeddings =  tokens_embed
+
+        
+        outputs = self.transformer(attention_mask = batch["attention_mask"], 
+                                    inputs_embeds = initial_embeddings, output_attentions=True)
+        attentions = outputs.attentions[-1]
+        return attentions
 
 class ProjectionHead(nn.Module):
     def __init__(self, config):

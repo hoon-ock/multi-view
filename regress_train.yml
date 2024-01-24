@@ -1,5 +1,5 @@
-run_name: rebase3-vanilla-catberta #combined-eqv2-chgnet-norm
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20_train_relaxed.pkl
+run_name: s2ef-2M-catberta #combined-eqv2-chgnet-norm
+train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/train/oc20-s2ef/oc20_s2ef_2M_last_frame.pkl
 val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_val_relaxed.pkl
 ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/direct_regress
 

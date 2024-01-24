@@ -4,7 +4,7 @@ CHGConfig:
 CLIPConfig:
   temperature: 1.0
 Path:
-  pretrain_ckpt: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/2nd-int--ft_0802_2121/checkpoint.pt
+  pretrain_ckpt: 'roberta-base' #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/2nd-int--ft_0802_2121/checkpoint.pt
 ProjectionConfig:
   dropout_rate: 0.1
   projection_dim: 3200
