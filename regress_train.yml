@@ -1,13 +1,13 @@
-run_name: s2ef-2M-catberta #combined-eqv2-chgnet-norm
-train_path: /home/jovyan/shared-scratch/jhoon/ocp2023/train/oc20-s2ef/oc20_s2ef_2M_last_frame.pkl
-val_path: /home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_val_relaxed.pkl
-ckpt_save_path: /home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/direct_regress
+run_name: # your own run name  
+train_path: #/define/your/path 
+val_path: #/define/your/path 
+ckpt_save_path: #/define/your/path 
 
-resume_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/checkpoint.pt
-resume_config: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_regress/combined-catberta-eqv2_1208_2117/clip.yml
+resume_path: null # checkpoint for resuming training
+resume_config: null # config for resuming training
 
-pt_ckpt_path: null #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-oc20-eqv2_1204_2048/checkpoint.pt
-model_config: model/clip.yml #/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/clip_ssl/ssl-oc20-eqv2_1204_2048/clip.yml
+pt_ckpt_path: null # (optional) path for pre-trained checkpoint
+model_config: model/clip.yml 
 
 head: pooler
 device: cuda
@@ -16,7 +16,7 @@ early_stop_threshold: 4
 batch_size: 32
 lr: 1.0e-5
 warmup_steps: 0
-optimizer: AdamW #gLLRD # AdamW, gLLRD
+optimizer: AdamW # AdamW, gLLRD
 scheduler: reduceLR
 loss_fn: MSELoss
 log_interval: 10
