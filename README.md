@@ -16,7 +16,7 @@ Before running any scripts, ensure you have all the necessary dependencies insta
 
 The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following Google Drive link: [dummy google drive link](#).
 
-Please download and place the data in the appropriate directory as per the configurations defined in the YAML files.
+Please download and place the data in the appropriate directory and update the data paths in the YAML files.
 
 ## Multimodal SSL Pretraining
 
