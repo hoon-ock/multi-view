@@ -128,15 +128,25 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     
    
     ############################################################################
-    ckpt_name = pt_ckpt_dir_path.split('/')[-1]
-    pt_ckpt_path = os.path.join(pt_ckpt_dir_path, "checkpoint.pt")
-    model_config_path = os.path.join(pt_ckpt_dir_path, "clip.yml") #config["model_config"]
+    if 'roberta-base' not in pt_ckpt_dir_path:
+        ckpt_name = pt_ckpt_dir_path.split('/')[-1]
+        pt_ckpt_path = os.path.join(pt_ckpt_dir_path, "checkpoint.pt")
+        model_config_path = os.path.join(pt_ckpt_dir_path, "clip.yml") #config["model_config"]
+        with open(model_config_path, "r") as f:
+            model_config = yaml.safe_load(f)
+
+    elif 'roberta-base' in pt_ckpt_dir_path:
+        ckpt_name = 'roberta-base'
+        with open("model/clip.yml", "r") as f:
+            model_config = yaml.safe_load(f)
+        model_config['Path']['pretrain_ckpt'] = "roberta-base" 
+        print('loading encoder from roberta-base')
     # train_config_path = os.path.join(pt_ckpt_dir_path, "regress_train.yml") #config["train_config"]
     ############################################################################
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if debug:
         device = "cpu"
-    
+    # breakpoint()
     print("=============================================================")
     print(f"Attention from {ckpt_name}")
     print("=============================================================")
@@ -164,26 +174,32 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
 
     #breakpoint()    
     # ===================== MODEL and TOKENIZER ===============================
-    with open(model_config_path, "r") as f:
-        model_config = yaml.safe_load(f)
+    # with open(model_config_path, "r") as f:
+    #     model_config = yaml.safe_load(f)
+   
     model = TextEncoder_attn(model_config).to(device)  
 
     print('loading pretrained checkpoint from')
     print(ckpt_name)
     ####  check this part!!!!
     # breakpoint()
-    model_state_dict = model.state_dict()
+    # model_state_dict = model.state_dict()
     # prefix = 'text_encoder.'
     # state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
     # new_state_dict = {key[len(prefix):]: value for key, value in state_dict.items() if key.startswith(prefix)}
     # # remove keys starting with chg_embedding from the new_state_dict
     # new_state_dict = {key: value for key, value in new_state_dict.items() if not key.startswith('chg_embedding')}
-    prefix = 'text_encoder.'
-    state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
-    new_state_dict = {key[len(prefix):]: value for key, value in state_dict.items() \
-                      if key.startswith(prefix) and not key.startswith(prefix + 'chg_embedding')}
-    # breakpoint()
-    model.load_state_dict(new_state_dict, strict=True) 
+    if ckpt_name != 'roberta-base':
+        prefix = 'text_encoder.'
+        if 'ssl' not in ckpt_name:
+            state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
+        elif 'ssl' in ckpt_name:
+            state_dict = torch.load(pt_ckpt_path, map_location=device)
+        # breakpoint()
+        new_state_dict = {key[len(prefix):]: value for key, value in state_dict.items() \
+                          if key.startswith(prefix) and not key.startswith(prefix + 'chg_embedding')}
+        # breakpoint()
+        model.load_state_dict(new_state_dict, strict=True) 
     # breakpoint() 
     # ========================= PREDICTION ====================================
     predictions = attention_per_part(test_data_loader, model, tokenizer, device)
@@ -209,13 +225,14 @@ if __name__ == "__main__":
     parser.add_argument("--model", type=str, choices=["gnoc", "escn", "scn", "eqv2"], default="eqv2")
     parser.add_argument("--debug", action="store_true")
     parser.add_argument("--ckpt", type=str, default=None)
-    parser.add_argument("--train_type", type=str, choices=["direct_regress", "clip_regress"], default="clip_regress")
-
+    parser.add_argument("--train_type", type=str, choices=["direct_regress", "clip_regress", "clip_ssl"], default="clip_regress")
+    # parser.add_argument("--roberta", type=bool, default=False)
     args = parser.parse_args()
     split = args.split
     model = args.model
     ckpt = args.ckpt
     train_type = args.train_type
+    # roberta = args.roberta
     debug = args.debug
     # Conduct prediction
     data_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_{split}_{model}_relaxed.pkl"
