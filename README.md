@@ -51,7 +51,7 @@ python regress_run.py
 To make predictions using text-only data, utilize the `regress_predict.py` script as follows:
 
 ```bash
-python regress_predict.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_PREDICTIONS>
+python regress_predict.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_PREDICTIONS>
 ```
 
 
