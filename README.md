@@ -28,6 +28,11 @@ Please download and place the data in the appropriate directory and update the d
 
 The example checkpoints can be found in the following link: [Checkpoint](https://cmu.box.com/s/2i4kyyfrlrtilbm8n39xtd8piramnbz5).
 
+### Original Structure Data
+
+The original structure data of adsorbate-catalyst systems can be found at the Open Catalyst Project's dataset documentation: [https://github.com/Open-Catalyst-Project/ocp/blob/main/DATASET.md](https://github.com/Open-Catalyst-Project/ocp/blob/main/DATASET.md).
+
+
 ## Multimodal SSL Pretraining
 
 To run the multimodal SSL pretraining, execute the following command:
