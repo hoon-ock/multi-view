@@ -20,11 +20,13 @@ This project requires the following packages:
 - `torch==1.11.0`
 - `transformers==4.38.2`
 
-## Data
+## Data & Checkpoint
 
-The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following Google Drive link: [dummy google drive link](#).
+The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following link: [Data](https://cmu.box.com/s/6d2zbi00yoizyg60ppztdgqiaes1msqw).
 
 Please download and place the data in the appropriate directory and update the data paths in the YAML files.
+
+The example checkpoints can be found in the following link: [Checkpoint](https://cmu.box.com/s/2i4kyyfrlrtilbm8n39xtd8piramnbz5).
 
 ## Multimodal SSL Pretraining
 
