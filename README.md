@@ -10,7 +10,15 @@ This repository is designed for running multimodal self-supervised learning (SSL
 
 ## Prerequisites
 
-Before running any scripts, ensure you have all the necessary dependencies installed. This may involve setting up a virtual environment and installing the packages listed in a `requirements.txt` file, if provided.
+Before you begin, ensure you have met the following requirements:
+
+- Python 3.6 or above (Recommended: Python 3.8)
+- pip (Python Package Installer)
+
+This project requires the following packages:
+
+- `torch==1.11.0`
+- `transformers==4.38.2`
 
 ## Data
 
@@ -52,7 +60,7 @@ python regress_predict.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_
 To extract section-wise attention from the model, use the `get_section_attention.py` script:
 
 ```bash
-python get_section_attention.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
+python get_section_attention.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
 ```
 
 ## Extracting Text Encoder Embeddings for t-SNE Plot
@@ -60,7 +68,7 @@ python get_section_attention.py --data_path <PATH_TO_DATA> --checkpoint_path <PA
 To obtain text encoder embeddings suitable for visualization with t-SNE plots, execute:
 
 ```bash
-python get_text_embedding.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
+python get_text_embedding.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
 ```
 
 ## Inquiries
