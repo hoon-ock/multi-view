@@ -1,22 +1,61 @@
-# Project Repository (Under Construction)
+# Multimodal Self-Supervised Learning and Fine-Tuning Repository
 
-## 🚧 Repository Status: Under Construction 🚧
+This repository is designed for running multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, and various prediction and analysis scripts related to the model's performance and outputs. Below are the instructions to effectively utilize this repository.
 
-Thank you for visiting our project repository. We are excited to announce that the full version of this repository is slated for release in mid-February. We are working diligently to ensure that we deliver a robust and comprehensive codebase for your use.
+## Prerequisites
 
-### Insights and Progress Updates
+Before running any scripts, ensure you have all the necessary dependencies installed. This may involve setting up a virtual environment and installing the packages listed in a `requirements.txt` file, if provided.
 
-For the time being, you are welcome to explore this repository for a sneak peek into what we are developing. Please note that the current version is a work in progress and may contain placeholders, experimental code, and features that are being actively developed and tested.
+## Data
 
-### Upcoming Clean Release
+The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following Google Drive link: [dummy google drive link](#).
 
-We are committed to maintaining high standards of code quality and documentation. A cleaned and polished version of the repository will be released along with the full version. We appreciate your patience and are looking forward to providing you with a top-notch product.
+Please download and place the data in the appropriate directory as per the configurations defined in the YAML files.
 
-### Stay Tuned
+## Multimodal SSL Pretraining
 
-To stay updated on the latest developments and release announcements, please consider starring and watching this repository.
+To run the multimodal SSL pretraining, execute the following command:
 
-If you have any questions or would like to get in touch with us regarding the project, feel free to open an issue, and we'll get back to you as soon as possible.
+```bash
+python clip_run.py
+```
 
-Thank you for your interest, and we can't wait to share our project with you!
+Adjustments to the data path, training configurations, and other settings can be made in the `clip_train.yml` file located in the root directory.
+
+Additionally, settings specific to the SSL multimodal approach are defined in `model/clip.yml`.
+
+## Text-Only Regression Fine-Tuning
+
+For text-only regression fine-tuning, the following command should be used:
+
+```bash
+python regress_run.py
+```
+
+Configuration for this process is managed through the `regress_train.yml` file, where you can define settings specific to the fine-tuning task.
+
+## Making Predictions with Text-Only Data
+
+To make predictions using text-only data, utilize the `regress_predict.py` script as follows:
+
+```bash
+python regress_predict.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_PREDICTIONS>
+```
+
+
+
+## Obtaining Section-wise Attention
+
+To extract section-wise attention from the model, use the `get_section_attention.py` script:
+
+```bash
+python get_section_attention.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
+```
+
+## Extracting Text Encoder Embeddings for t-SNE Plot
+
+To obtain text encoder embeddings suitable for visualization with t-SNE plots, execute:
+
+```bash
+python get_text_embedding.py --data_path <PATH_TO_DATA> --checkpoint_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
 
