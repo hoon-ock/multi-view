@@ -7,67 +7,6 @@ import pandas as pd
 import os, yaml, pickle
 from transformers import RobertaTokenizerFast
 import tqdm
-# Import your RegressionModel class, train_fn, and any other necessary modules
-
-# Define a function for making predictions
-# def predict_fn(data_loader, model, device):
-#     model.eval()  # Put the model in evaluation mode.
-#     predictions = []
-
-#     with torch.no_grad():  # Disable gradient calculation.
-#         for batch in tqdm.tqdm(data_loader):
-#             batch = {k: v.to(device) for k, v in batch.items()}
-#             outputs = model(batch).squeeze(-1)
-#             predictions.extend(outputs.cpu().numpy())  # Store predictions as numpy arrays
-
-#     return np.array(predictions)
-
-# def attention_per_part(data_loader, model, tokenizer, device):
-#     # model = model.to(device)
-#     model.eval()
-#     weights = [0, 0, 0, 0] # size is set as the max section number (4)
-#     with torch.no_grad():  # Disable gradient calculation.
-#         for batch in tqdm.tqdm(data_loader):
-#             batch = {k: v.to(device) for k, v in batch.items()}
-#             attentions = model(batch).squeeze(-1) # model should be TextEncoder_attn
-#             multihead_avg = attentions.mean(axis=1) # Average over heads
-#             attns = multihead_avg[:, 0, :]	# Scores from <s> token
-#             # breakpoint()
-#             ids, attns = batch['input_ids'].squeeze(0), attns.squeeze(0)	# Batch dim
-#             tokens = tokenizer.convert_ids_to_tokens(ids)
-
-#             partsAtt = []
-#             num_fails = 0
-  
-#             tokens = tokens[1:]
-#             attns = attns[1:]
-#         	# count number of </s> in tokens
-#             num_end_tokens = tokens.count('</s>')
-#             num_of_sections = 3
-#             if num_end_tokens != num_of_sections:
-#                 print('</s> number not matching with section number')
-#                 num_fails += 1
-#                 continue
-            
-#             for i in range(num_of_sections):
-#                 index = tokens.index('</s>') + 1
-#                 partsAtt.append(attns[:index])
-#                 tokens = tokens[index:]
-#                 attns = attns[index:]
-
-#             for part in range(len(partsAtt)):
-#                 weights[part] += partsAtt[part].sum().item()
-
-#         n = len(data_loader)
-#         for i in range(len(weights)):
-#             weights[i] /= n
-
-#         print(weights)
-#         print('the number of failures: ', num_fails)
-
-#         results = {'weights': weights, 'num_fails': num_fails}
-
-#     return results
 
 def attention_per_part(data_loader, model, tokenizer, device):
     model.eval()
@@ -121,17 +60,13 @@ def attention_per_part(data_loader, model, tokenizer, device):
 
     return results
 
-def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):  
-    # with open(os.path.join(pt_ckpt_dir_path, "clip.yml"), "r") as f:
-    #     config = yaml.safe_load(f)
-    # Hyperparameters and settings   
-    
+def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):      
    
     ############################################################################
     if 'roberta-base' not in pt_ckpt_dir_path:
         ckpt_name = pt_ckpt_dir_path.split('/')[-1]
         pt_ckpt_path = os.path.join(pt_ckpt_dir_path, "checkpoint.pt")
-        model_config_path = os.path.join(pt_ckpt_dir_path, "clip.yml") #config["model_config"]
+        model_config_path = os.path.join(pt_ckpt_dir_path, "clip.yml") 
         with open(model_config_path, "r") as f:
             model_config = yaml.safe_load(f)
 
@@ -141,7 +76,6 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
             model_config = yaml.safe_load(f)
         model_config['Path']['pretrain_ckpt'] = "roberta-base" 
         print('loading encoder from roberta-base')
-    # train_config_path = os.path.join(pt_ckpt_dir_path, "regress_train.yml") #config["train_config"]
     ############################################################################
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if debug:
@@ -161,7 +95,7 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
         
     # Load tokenizer
     tokenizer = RobertaTokenizerFast.from_pretrained('roberta-base')
-    # breakpoint()
+
     # Initialize training dataset
     test_dataset = RegressionDataset(texts = df_test["text"].values,
                                       targets = df_test["target"].values,
@@ -172,75 +106,54 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     test_data_loader = DataLoader(test_dataset, batch_size =1,
                                   shuffle = False, num_workers=1)
 
-    #breakpoint()    
-    # ===================== MODEL and TOKENIZER ===============================
-    # with open(model_config_path, "r") as f:
-    #     model_config = yaml.safe_load(f)
-   
+    
+    # ========================== MODEL ==========================   
     model = TextEncoder_attn(model_config).to(device)  
 
     print('loading pretrained checkpoint from')
     print(ckpt_name)
-    ####  check this part!!!!
-    # breakpoint()
-    # model_state_dict = model.state_dict()
-    # prefix = 'text_encoder.'
-    # state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
-    # new_state_dict = {key[len(prefix):]: value for key, value in state_dict.items() if key.startswith(prefix)}
-    # # remove keys starting with chg_embedding from the new_state_dict
-    # new_state_dict = {key: value for key, value in new_state_dict.items() if not key.startswith('chg_embedding')}
     if ckpt_name != 'roberta-base':
         prefix = 'text_encoder.'
         if 'ssl' not in ckpt_name:
             state_dict = torch.load(pt_ckpt_path, map_location=device)['model_state_dict']
         elif 'ssl' in ckpt_name:
             state_dict = torch.load(pt_ckpt_path, map_location=device)
-        # breakpoint()
         new_state_dict = {key[len(prefix):]: value for key, value in state_dict.items() \
                           if key.startswith(prefix) and not key.startswith(prefix + 'chg_embedding')}
-        # breakpoint()
         model.load_state_dict(new_state_dict, strict=True) 
-    # breakpoint() 
+
     # ========================= PREDICTION ====================================
-    predictions = attention_per_part(test_data_loader, model, tokenizer, device)
-    #predict_fn(test_data_loader, model, device)
+    predictions = attention_per_part(test_data_loader, model, tokenizer, device) # section-wise attention score
     
     # ========================= SAVE PREDICTION ===============================
+    if not os.path.exists(save_path):
+        os.makedirs(save_path)
     save_path = os.path.join(save_path, f"attn-{ckpt_name}-{tag}-strc.pkl")
     with open(save_path, "wb") as f:
         pickle.dump(predictions, f)
-    # df_test['pred'] = predictions
-    # df_test.to_pickle(save_path) 
     
-    ## save as dictionary where key is id in df_test, and values are predictions
-    # predictions_dict = dict(zip(df_test["id"].values, predictions))
-    # with open(save_path, "wb") as f:
-    #     pickle.dump(predictions_dict, f)
- 
 
 if __name__ == "__main__":
     import argparse
-    parser = argparse.ArgumentParser()
-    parser.add_argument("--split", type=str, choices=["eval","eval_dup","eval_non_dup"], default="eval")
-    parser.add_argument("--model", type=str, choices=["gnoc", "escn", "scn", "eqv2"], default="eqv2")
-    parser.add_argument("--debug", action="store_true")
-    parser.add_argument("--ckpt", type=str, default=None)
-    parser.add_argument("--train_type", type=str, choices=["direct_regress", "clip_regress", "clip_ssl"], default="clip_regress")
-    # parser.add_argument("--roberta", type=bool, default=False)
+    from datetime import datetime
+    parser = argparse.ArgumentParser(description="Script to run predictions.")
+    
+    parser.add_argument("--data_path", type=str, required=True, help="Path to the data file.")
+    parser.add_argument("--pt_ckpt_dir_path", type=str, required=True, help="Path to the pretrained checkpoint directory.")
+    parser.add_argument("--save_path", type=str, required=True, help="Path to save the predictions.")
+    parser.add_argument("--debug", action="store_true", help="Enable debug mode.")
+    parser.add_argument("--tag", type=str, default=datetime.now().strftime("%y%m%d_%H%M%S"), help="Tag for the run. Defaults to current date and time if not provided.")
+
     args = parser.parse_args()
-    split = args.split
-    model = args.model
-    ckpt = args.ckpt
-    train_type = args.train_type
-    # roberta = args.roberta
+    
+    # Use the directly provided paths
+    data_path = args.data_path
+    pt_ckpt_dir_path = args.pt_ckpt_dir_path
+    save_path = args.save_path
     debug = args.debug
-    # Conduct prediction
-    data_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/oc20dense_{split}_{model}_relaxed.pkl"
-    # data_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/clip_data/{split}_{model}.pkl"
-    # /eval_{model}_dup.pkl
-    pt_ckpt_dir_path = f"/home/jovyan/shared-scratch/jhoon/ocp2023/checkpoints/{train_type}/{ckpt}"
-    save_path = "/home/jovyan/shared-scratch/jhoon/ocp2023/results/attentions/indv/" 
-    tag = f"{split}-{model}"
+    tag = args.tag
+    #tag = "custom-tag-based-on-your-logic" # Modify this based on your needs
+    
     print("=============================================================")
-    print(f"Making predictions for {split} split of {model} model")
+    print(f"Making predictions with provided paths")
     run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug)
