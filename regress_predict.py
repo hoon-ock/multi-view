@@ -7,7 +7,6 @@ import pandas as pd
 import os, yaml, pickle
 from transformers import RobertaTokenizerFast
 import tqdm
-# Import your RegressionModel class, train_fn, and any other necessary modules
 
 # Define a function for making predictions
 def predict_fn(data_loader, model, device):
@@ -36,16 +35,12 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     if debug:
         device = "cpu"
     batch = 32
-    
     print("=============================================================")
     print(f"Prediction made with {ckpt_name}")
     print("=============================================================")
-
-    
     # ========================= DATA LOADING =================================
     # Load train and validation data 
     df_test = pd.read_pickle(data_path)
-    
     if debug:
         df_test = df_test.sample(10)
         
@@ -54,7 +49,6 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # Initialize training dataset
     test_dataset = RegressionDataset(texts = df_test["text"].values,
                                       targets = df_test["target"].values,
-                                      chg_emb = df_test["chg_emb"].values,
                                       tokenizer = tokenizer,
                                       seq_len= tokenizer.model_max_length)
     # Create training dataloader
@@ -63,12 +57,8 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     
     # ===================== MODEL and TOKENIZER ===============================
     with open(model_config_path, "r") as f:
-        model_config = yaml.safe_load(f)
-    # for prediction we don't need to do charge embedding broadcasting
-    if model_config['CHGConfig']['emb_tagging']:
-        print("emb_tagging is set to False for prediction")
-        model_config['CHGConfig']['emb_tagging'] = False
-    
+        model_config = yaml.safe_load(f)    
+        
     with open(train_config_path, "r") as f:
         train_config = yaml.safe_load(f)
     head = train_config["head"]
@@ -100,14 +90,12 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
 if __name__ == "__main__":
     import argparse
     from datetime import datetime
-    parser = argparse.ArgumentParser(description="Script to get embeddings.")
-    
+    parser = argparse.ArgumentParser(description="Script to get predictions.")
     parser.add_argument("--data_path", type=str, required=True, help="Path to the data file.")
     parser.add_argument("--pt_ckpt_dir_path", type=str, required=True, help="Path to the pretrained checkpoint directory.")
-    parser.add_argument("--save_path", type=str, required=True, help="Path where to save the embeddings.")
+    parser.add_argument("--save_path", type=str, required=True, help="Path where to save the predictions.")
     parser.add_argument("--tag", type=str, default=datetime.now().strftime("%y%m%d_%H%M%S"), help="Tag for the run, defaults to current date and time if not provided.")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode if set.")
-    
     args = parser.parse_args()
     
     # Directly use the provided paths and tag
@@ -117,5 +105,5 @@ if __name__ == "__main__":
     tag = args.tag
     debug = args.debug
     print("=============================================================")
-    print(f"Making predictions for {split} split of {model} model")
+    print(f"Making predictions for {data_path}") #{split} split of {model} model")
     run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug)
