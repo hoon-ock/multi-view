@@ -94,20 +94,20 @@ If you use this work in your research, please cite two papers as follows:
       eprint={2401.07408},
       archivePrefix={arXiv},
       primaryClass={cs.CE}
-}
+      }
 ```
 
 ```bibtex
 @article{ock2023catberta,
-author = {Ock, Janghoon and Guntuboina, Chakradhar and Barati Farimani, Amir},
-title = {Catalyst Energy Prediction with CatBERTa: Unveiling Feature Exploration Strategies through Large Language Models},
-journal = {ACS Catalysis},
-volume = {13},
-number = {24},
-pages = {16032-16044},
-year = {2023},
-doi = {10.1021/acscatal.3c04956},
-URL = {https://doi.org/10.1021/acscatal.3c04956},
-eprint = {https://doi.org/10.1021/acscatal.3c04956}
-}
+         author = {Ock, Janghoon and Guntuboina, Chakradhar and Barati Farimani, Amir},
+         title = {Catalyst Energy Prediction with CatBERTa: Unveiling Feature Exploration Strategies through Large Language Models},
+         journal = {ACS Catalysis},
+         volume = {13},
+         number = {24},
+         pages = {16032-16044},
+         year = {2023},
+         doi = {10.1021/acscatal.3c04956},
+         URL = {https://doi.org/10.1021/acscatal.3c04956},
+         eprint = {https://doi.org/10.1021/acscatal.3c04956}
+         }
 ```
