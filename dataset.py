@@ -2,10 +2,9 @@ import torch
 
 class ClipDataset(torch.utils.data.Dataset):
    
-    def __init__(self, texts, targets, chg_emb, graph_emb, tokenizer, seq_len=512): 
+    def __init__(self, texts, targets, graph_emb, tokenizer, seq_len=512): 
         self.texts = texts
         self.targets = targets
-        self.chg_emb = chg_emb
         self.graph_emb = graph_emb
         self.tokenizer = tokenizer
         self.seq_len = seq_len 
@@ -33,17 +32,15 @@ class ClipDataset(torch.utils.data.Dataset):
         return {"input_ids": torch.tensor(tokenized["input_ids"], dtype=torch.long),
                 "attention_mask": torch.tensor(tokenized["attention_mask"], dtype=torch.long),
                 "target": torch.tensor(self.targets[idx], dtype=torch.float),
-                "chg_embed" :torch.tensor(self.chg_emb[idx], dtype=torch.float),
                 "graph_embed": torch.tensor(self.graph_emb[idx], dtype=torch.float),
                }
     
 
 class RegressionDataset(torch.utils.data.Dataset):
    
-    def __init__(self, texts, targets, chg_emb, tokenizer, seq_len=512): 
+    def __init__(self, texts, targets, tokenizer, seq_len=512): 
         self.texts = texts
         self.targets = targets
-        self.chg_emb = chg_emb
         self.tokenizer = tokenizer
         self.seq_len = seq_len 
 
@@ -70,5 +67,4 @@ class RegressionDataset(torch.utils.data.Dataset):
         return {"input_ids": torch.tensor(tokenized["input_ids"], dtype=torch.long),
                 "attention_mask": torch.tensor(tokenized["attention_mask"], dtype=torch.long),
                 "target": torch.tensor(self.targets[idx], dtype=torch.float),
-                "chg_embed" :torch.tensor(self.chg_emb[idx], dtype=torch.float),
                }

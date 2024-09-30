@@ -12,47 +12,6 @@ from model.models import CLIPModel
 from transformers import RobertaTokenizerFast
 from datetime import datetime
 
-
-def update_projection_dim(train_config_file):
-    """
-    Update 'projection_dim' in the model config YAML file based on 'GNN_EMB'.
-
-    Parameters:
-        config (dict): The primary configuration dictionary with keys 
-                      'gnn_emb' and 'model_config'.
-    """
-    # Load config file
-    with open(train_config_file, "r") as f:
-        config = yaml.safe_load(f)
-
-    # Extract relevant information from the primary config.
-    MODEL_CONFIG = config["model_config"]
-    GNN_EMB = config['gnn_emb']
-    
-    # Load the MODEL_CONFIG yaml file.
-    with open(MODEL_CONFIG, 'r') as file:
-        try:
-            model_config_file = yaml.safe_load(file)
-        except yaml.YAMLError as exc:
-            print(exc)
-            return
-    
-    # Update 'projection_dim' based on the value of GNN_EMB.
-    if GNN_EMB == 'gnoc_emb':
-        model_config_file['ProjectionConfig']['projection_dim'] = 256
-    elif GNN_EMB == 'eq_emb':
-        model_config_file['ProjectionConfig']['projection_dim'] = 3200
-    else:
-        print(f"Unknown GNN_EMB value: {GNN_EMB}. Not updating 'projection_dim'.")
-        return
-    
-    # Save the updated MODEL_CONFIG back to file.
-    with open(MODEL_CONFIG, 'w') as file:
-        try:
-            yaml.dump(model_config_file, file)
-        except yaml.YAMLError as exc:
-            print(exc)    
-
 def train_fn(data_loader, model, optimizer, device, 
              scheduler, log_interval, debug=False):
     model.train()                               # Put the model in training mode.                   
@@ -61,7 +20,6 @@ def train_fn(data_loader, model, optimizer, device,
     print('training...')
 
     batch_iteration = 0
-
     for batch in tqdm(data_loader):                   # Loop over all batches.
         batch = {k: v.to(device) for k, v in batch.items()}
 
@@ -73,12 +31,6 @@ def train_fn(data_loader, model, optimizer, device,
         optimizer.step()                        # To update parameters based on current gradients.
         lr_list.append(optimizer.param_groups[0]["lr"])
         
-        # if batch_iteration % 100 == 0:
-        #     # Log the loss and learning rate with wandb
-        #     if "debug" not in run_name:
-        #         wandb.log({"train_loss": loss.item(), 
-        #                    "lr": optimizer.param_groups[0]["lr"]}, 
-        #                    step = batch_iteration)
         if (batch_iteration != 0) and (batch_iteration % log_interval == 0) and (debug == False):
             wandb.log({"iter_train_loss": loss.item()}) 
         if not isinstance(scheduler, torch.optim.lr_scheduler.ReduceLROnPlateau):
@@ -95,19 +47,11 @@ def validate_fn(data_loader, model, device):
     val_losses = []
 
     print('validating...')
-
-    # batch_iteration = 0
     with torch.no_grad():                           # Disable gradient calculation.
         for batch in tqdm(data_loader):                   # Loop over all batches.   
             batch = {k: v.to(device) for k, v in batch.items()}
             loss = model(batch).squeeze(-1)                     
             val_losses.append(loss.item())
-
-            # if batch_iteration % 200 == 0:
-            # # Log the loss and learning rate with wandb
-            #     if "debug" not in run_name:
-            #         wandb.log({"val_loss": loss.item()}, step=batch_iteration)
-            # batch_iteration += 1
     return np.mean(val_losses)
 
 
@@ -122,7 +66,7 @@ def run_clip(config_file):
     TRAIN_PATH = config["train_path"] 
     VAL_PATH = config["val_path"]
     CKPT_SAVE_DIR = os.path.join(config["ckpt_save_path"], RUN_NAME)
-    PT_CKPT_PATH = config["pt_ckpt_path"] if config.get("pt_ckpt_path") else None
+    RESUME_CKPT_PATH = config["resume_ckpt_path"] if config.get("resume_ckpt_path") else None
     MODEL_CONFIG = config["model_config"]
     DEVICE = config["device"]
     EPOCHS = config["num_epochs"]
@@ -135,8 +79,6 @@ def run_clip(config_file):
     SCHD = config["scheduler"] if config.get("scheduler") else "reduceLR" # scheduler type
     LOG_INTERVAL = config["log_interval"] if config.get("log_interval") else 10 # log interval
     PATIENCE = config["patience"] if config.get("patience") else 3 # patience for scheduler
-    GNN_EMB = config['gnn_emb']
-    # CHG_EMB = config['chg_emb']
     DEBUG = config["debug"] if config.get("debug") else False
     if DEBUG:
         DEVICE = "cpu"
@@ -153,12 +95,11 @@ def run_clip(config_file):
     print(f"Warmup steps: {WRMUP}")
     print(f"Optimizer: {OPTIM}")
     print(f"Scheduler: {SCHD}")
-    if PT_CKPT_PATH:
-        print(f"Pretrained checkpoint path: {PT_CKPT_PATH}")
+    if RESUME_CKPT_PATH:
+        print(f"Pretrained checkpoint path: {RESUME_CKPT_PATH}")
     print("=============================================================")
     if not DEBUG:
         wandb.init(project="clip", name=RUN_NAME) 
-                   #,dir='/home/jovyan/shared-scratch/jhoon/ocp2023/log')
         
     # ========================= COPY CONFIG FILE ==============================
     if not DEBUG:
@@ -177,15 +118,13 @@ def run_clip(config_file):
     # Initialize training dataset
     train_dataset = ClipDataset(texts = df_train["text"].values,
                               targets = df_train["target"].values,
-                              chg_emb = df_train["chg_emb"].values, # if CHGNET_EMB else None,
-                              graph_emb = df_train[GNN_EMB].values,
+                              graph_emb = df_train["eq_emb"].values,
                               tokenizer = tokenizer,
                               seq_len= tokenizer.model_max_length)
     # Initialize validation dataset
     val_dataset = ClipDataset(texts = df_val["text"].values,
                             targets = df_val["target"].values,
-                            chg_emb = df_val["chg_emb"].values, # if CHGNET_EMB else None,
-                            graph_emb = df_val[GNN_EMB].values,
+                            graph_emb = df_val["eq_emb"].values,
                             tokenizer = tokenizer,
                             seq_len= tokenizer.model_max_length)
     # Create training dataloader
@@ -198,17 +137,14 @@ def run_clip(config_file):
     # ===================== MODEL and TOKENIZER ===============================
     with open(MODEL_CONFIG, "r") as f:
         model_config = yaml.safe_load(f)
-    # model_config['CHG_EMB_TAG'] = CHG_EMB
-    # breakpoint()
+ 
     model = CLIPModel(model_config).to(DEVICE)
-    if PT_CKPT_PATH:
+    if RESUME_CKPT_PATH:
         print('loading pretrained model from')
-        print(PT_CKPT_PATH)
-        state_dict = torch.load(PT_CKPT_PATH, map_location=DEVICE)
+        print(RESUME_CKPT_PATH)
+        state_dict = torch.load(RESUME_CKPT_PATH, map_location=DEVICE)
         model.load_state_dict(state_dict)        
         
-    # if "debug" not in RUN_NAME:
-    #     wandb.watch(model, log="parameters")
     # ====================== OPTIMIZER AND SCHEDULER =========================
     if config.get("optimizer") == "AdamW":
         optimizer = torch.optim.AdamW(model.parameters(), lr=LR, weight_decay=0.01) #originally 1e-6
@@ -273,13 +209,5 @@ def run_clip(config_file):
 
 
 if __name__ == "__main__":
-
-    # Load the config file
-    # with open("clip_train.yml", "r") as f:
-    #     config = yaml.safe_load(f)
-
-    # Update 'projection_dim' in the model config YAML file based on 'GNN_EMB'.
-    update_projection_dim("clip_train.yml")
-    
     # Run the training loop
     run_clip("clip_train.yml") 
