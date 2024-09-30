@@ -9,9 +9,30 @@ from transformers import RobertaTokenizerFast
 import tqdm
 
 def attention_per_part(data_loader, model, tokenizer, device):
+    """
+    This function calculates and aggregates the attention weights from different heads of the model
+    over 4 sections of the input sequence, determined by special tokens (</s>), and returns the
+    normalized weights and the number of failures (when section identification fails).
+
+    Input:
+    - data_loader: PyTorch DataLoader providing batches of input data. Each batch is a dictionary
+      with keys typically including 'input_ids' (for tokenized input sequences).
+    - model: The neural network model that computes attention scores. It is expected to output
+      attention weights with a specific architecture (e.g., 12 attention heads).
+    - tokenizer: Tokenizer used to convert input_ids back to tokens for identifying sections.
+      It should have the method 'convert_ids_to_tokens'.
+    - device: Device (e.g., 'cpu' or 'cuda') on which tensors are processed.
+
+    Output:
+    - results (dict): A dictionary containing:
+        - 'weights': A tensor of shape (4, num_heads) where each element corresponds to the sum of
+          attention scores over different sections of the input for each attention head. These
+          values are normalized by the number of samples.
+        - 'num_fails': An integer representing the number of batches where the expected number of
+          sections (defined by the number of '</s>' tokens) did not match the expected section count.
+    """
     model.eval()
-    
-    # Assume there are 12 heads in the model (adjust based on your model's architecture)
+    # there are 12 heads in the CatBERTa (adjust based on your model's architecture)
     num_heads = 12
     weights = torch.zeros((4, num_heads)) # For 4 sections and num_heads heads
 
@@ -31,14 +52,16 @@ def attention_per_part(data_loader, model, tokenizer, device):
 
                     partsAtt = []
                     tokens_copy = tokens[1:]
-                    head_attn = head_attn[1:]
+                    #head_attn = head_attn[1:]
                     num_end_tokens = tokens_copy.count('</s>')
                     num_of_sections = 3
                     if num_end_tokens != num_of_sections:
                         print('</s> number not matching with section number')
                         num_fails += 1
                         continue
-                    
+                    # attention score for <s> token
+                    partsAtt.append(head_attn[0])
+
                     for _ in range(num_of_sections):
                         index = tokens_copy.index('</s>') + 1
                         partsAtt.append(head_attn[:index])
@@ -46,6 +69,7 @@ def attention_per_part(data_loader, model, tokenizer, device):
                         head_attn = head_attn[index:]
 
                     for part in range(len(partsAtt)):
+                        #breakpoint()
                         weights[part, head] += partsAtt[part].sum().item()
 
         n = len(data_loader.dataset)
@@ -55,14 +79,12 @@ def attention_per_part(data_loader, model, tokenizer, device):
 
         print(weights)
         print('the number of failures: ', num_fails)
-
         results = {'weights': weights, 'num_fails': num_fails}
-
+    breakpoint()
     return results
 
 def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):      
    
-    ############################################################################
     if 'roberta-base' not in pt_ckpt_dir_path:
         ckpt_name = pt_ckpt_dir_path.split('/')[-1]
         pt_ckpt_path = os.path.join(pt_ckpt_dir_path, "checkpoint.pt")
@@ -80,16 +102,13 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     device = "cuda" if torch.cuda.is_available() else "cpu"
     if debug:
         device = "cpu"
-    # breakpoint()
+
     print("=============================================================")
     print(f"Attention from {ckpt_name}")
     print("=============================================================")
-
-    
     # ========================= DATA LOADING =================================
     # Load train and validation data 
     df_test = pd.read_pickle(data_path)
-    
     if debug:
         df_test = df_test.sample(10)
         
@@ -99,7 +118,6 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # Initialize training dataset
     test_dataset = RegressionDataset(texts = df_test["text"].values,
                                       targets = df_test["target"].values,
-                                      chg_emb = df_test["chg_emb"].values,
                                       tokenizer = tokenizer,
                                       seq_len= tokenizer.model_max_length)
     # Create training dataloader
