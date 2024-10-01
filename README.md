@@ -72,7 +72,9 @@ Specific settings should be defined in `regress_train.yml`.
 To make predictions using text-only data, utilize the `regress_predict.py` script as follows:
 
 ```bash
-python regress_predict.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_PREDICTIONS>
+python regress_predict.py --data_path <PATH_TO_DATA> \
+                          --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> \
+                          --save_path <PATH_TO_SAVE_PREDICTIONS>
 ```
 
 ---
@@ -101,7 +103,9 @@ python analysis/parity_plot.py --pred_path <PATH_TO_PRED_RESULTS> \
 To extract section-wise attention from the model, use the `get_section_attention.py` script:
 
 ```bash
-python analysis/get_section_attention.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
+python analysis/get_section_attention.py --data_path <PATH_TO_DATA> \
+                                         --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> \ 
+                                         --save_path <PATH_TO_SAVE_OUTPUT>
 ```
 
 ### 4-3. Extracting Text Encoder Embeddings for t-SNE Plot
@@ -109,7 +113,9 @@ python analysis/get_section_attention.py --data_path <PATH_TO_DATA> --pt_ckpt_di
 To obtain text encoder embeddings suitable for visualization with t-SNE plots, execute:
 
 ```bash
-python analysis/get_text_embedding.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
+python analysis/get_text_embedding.py --data_path <PATH_TO_DATA> \
+                                      --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> \
+                                      --save_path <PATH_TO_SAVE_EMBEDDINGS>
 ```
 
 
