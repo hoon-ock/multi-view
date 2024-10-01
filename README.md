@@ -20,18 +20,21 @@ This project requires the following packages:
 - `torch==1.11.0`
 - `transformers==4.38.2`
 
-## Data & Checkpoint
+## Data
 
+### Preprocessing
+
+For detailed preprocessing steps, please refer to `data/README.md`.
+
+### Files
 The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following link: [Data](https://cmu.box.com/s/6d2zbi00yoizyg60ppztdgqiaes1msqw).
 
 Please download and place the data in the appropriate directory and update the data paths in the YAML files.
 
+
+## Checkpoint
+
 The example checkpoints can be found in the following link: [Checkpoint](https://cmu.box.com/s/2i4kyyfrlrtilbm8n39xtd8piramnbz5).
-
-### Original Structure Data
-
-The original structure data of adsorbate-catalyst systems can be found at the Open Catalyst Project's dataset documentation: [https://github.com/Open-Catalyst-Project/ocp/blob/main/DATASET.md](https://github.com/Open-Catalyst-Project/ocp/blob/main/DATASET.md).
-
 
 ## Multi-modal SSL Pre-training (Graph-assisted Pre-training)
 
