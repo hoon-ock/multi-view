@@ -9,7 +9,9 @@
 This repository provides the tools for multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, as well as prediction and analysis scripts related to model performance and outputs.
 
 Below are the instructions to effectively use this repository.
+
 ---
+
 ## 1. Prerequisites
 
 Before you begin, ensure you have met the following requirements:
