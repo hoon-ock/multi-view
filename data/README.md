@@ -2,6 +2,8 @@
 
 This repository contains scripts and guidelines for handling the OC20 and OC20-Dense datasets, including steps for extracting relaxed positions, generating string representations, and integrating string files.
 
+---
+
 ## Original Datasets
 
 The original datasets for OC20 and OC20-Dense can be accessed from the following links:
@@ -39,6 +41,8 @@ python relaxed_frame_lmdb.py --mapping_file_path <PATH_TO_MAPPING_FILE> \
 - **Reference Energy file**: `oc20dense_ref_energies.pkl`
 - **Tag file**: `oc20dense_tags.pkl`
 
+---
+
 ## String Generation
 
 After preparing the LMDB files, strings can be generated for further processing.
@@ -64,6 +68,8 @@ python string_generator_oc20dense.py --lmdb_path <PATH_TO_LMDB> \
 
 - **OC20 metadata file**: `oc20_data_mapping.pkl`
 - **OC20-Dense metadata file**: `oc20dense_mapping.pkl`
+
+---
 
 ## String File Integration
 
