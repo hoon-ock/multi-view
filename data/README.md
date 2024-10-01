@@ -9,7 +9,7 @@ The original datasets for OC20 and OC20-Dense can be accessed from the following
 - [Original OC20-Dense Dataset](https://fair-chem.github.io/core/datasets/oc20dense.html)
 - [Challenge OC20-Dense Dataset](https://opencatalystproject.org/challenge.html)
 
-In the paper, OC20-Dense datasets for OCP 2023 Challenge were used.
+In the paper, OC20-Dense datasets for [OCP 2023 Challenge](https://opencatalystproject.org/challenge.html) were used.
 - **OC20-Dense Training set**: lmdb(`oc20dense_is2re_train_v2.tar.gz`), traj (`oc20dense_s2ef_train.tar.gz`)
 - **OC20-Dense Validation set**: lmdb(`oc20dense_ood_val.tar.gz`), traj(`oc20dense_val_trajectories.tar.gz`)
 - **ML-relaxed Test set**: gemnet-oc (`gemnet_oc_2M_oc20dense_val_ood.tar.gz`), scn (`scn_2M_oc20dense_val_ood.tar.gz`), escn (`escn_2M_oc20dense_val_ood.tar.gz`)
