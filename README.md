@@ -7,7 +7,7 @@
 ![TOC_resized](https://github.com/hoon-ock/multi-view/assets/93333323/0ad53e44-18df-43a0-a413-1bc5438777e6)
 
 This repository is designed for running multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, and various prediction and analysis scripts related to the model's performance and outputs. Below are the instructions to effectively utilize this repository.
-
+---
 ## Prerequisites
 
 Before you begin, ensure you have met the following requirements:
@@ -20,6 +20,8 @@ This project requires the following packages:
 - `torch==1.11.0`
 - `transformers==4.38.2`
 
+---
+
 ## Data
 
 ### Preprocessing
@@ -31,6 +33,7 @@ The dataset required for training and prediction includes equiformer embeddings 
 
 Please download and place the data in the appropriate directory and update the data paths in the YAML files.
 
+---
 
 ## Checkpoint
 
@@ -48,6 +51,8 @@ Adjustments to the data path, training configurations, and other settings can be
 
 Additionally, settings specific to the SSL multimodal approach are defined in `model/clip.yml`.
 
+---
+
 ## Text-Only Regression Fine-Tuning
 
 For text-only regression fine-tuning, the following command should be used:
@@ -64,6 +69,7 @@ To make predictions using text-only data, utilize the `regress_predict.py` scrip
 python regress_predict.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_PREDICTIONS>
 ```
 
+---
 
 ## Obtaining Section-wise Attention
 
@@ -81,9 +87,13 @@ To obtain text encoder embeddings suitable for visualization with t-SNE plots, e
 python get_text_embedding.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
 ```
 
+---
+
 ## Inquiries
 
 For any questions or further information, please reach out to [jock@andrew.cmu.edu](mailto:jock@andrew.cmu.edu).
+
+---
 
 ## Citation
 
