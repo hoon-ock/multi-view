@@ -8,7 +8,7 @@
 
 This repository is designed for running multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, and various prediction and analysis scripts related to the model's performance and outputs. Below are the instructions to effectively utilize this repository.
 ---
-## Prerequisites
+## 1. Prerequisites
 
 Before you begin, ensure you have met the following requirements:
 
@@ -22,26 +22,28 @@ This project requires the following packages:
 
 ---
 
-## Data
+## 2. Data & Checkpoint
 
-### Preprocessing
+### 2-1. Preprocessing
 
 For detailed preprocessing steps, please refer to [`data/README.md`](data/README.md).
 
-### Files
+### 2-2. Data Files
 The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following link: [Data](https://cmu.box.com/s/6d2zbi00yoizyg60ppztdgqiaes1msqw).
 
 Please download and place the data in the appropriate directory and update the data paths in the YAML files.
 
----
-
-## Checkpoint
+### 2-3. Checkpoint
 
 The example checkpoints can be found in the following link: [Checkpoint](https://cmu.box.com/s/2i4kyyfrlrtilbm8n39xtd8piramnbz5).
 
-## Multi-modal SSL Pre-training (Graph-assisted Pre-training)
+---
 
-To run the multimodal SSL pretraining, execute the following command:
+## 3. Training & Prediction
+
+### 3-1. Graph-assisted Pre-trainin (Multi-modal SSL Pre-training)
+
+To run the graph-assisted pre-training, execute the following command:
 
 ```bash
 python clip_run.py
@@ -51,9 +53,7 @@ Adjustments to the data path, training configurations, and other settings can be
 
 Additionally, settings specific to the SSL multimodal approach are defined in `model/clip.yml`.
 
----
-
-## Text-Only Regression Fine-Tuning
+### 3-2. Text-Only Fine-Tuning
 
 For text-only regression fine-tuning, the following command should be used:
 
@@ -61,7 +61,9 @@ For text-only regression fine-tuning, the following command should be used:
 python regress_run.py
 ```
 
-## Making Predictions with Text-Only Data
+Specific settings should be defined in `regress_train.yml`.
+
+## 3-3. Text-Only Prediction
 
 To make predictions using text-only data, utilize the `regress_predict.py` script as follows:
 
@@ -71,21 +73,41 @@ python regress_predict.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO
 
 ---
 
-## Obtaining Section-wise Attention
+## 4. Analysis 
+
+### 4-2. Test Prediction Comparison with Valid DFT Energies
+
+In the paper, test predictions are made on ML-relaxed structures. To assess their accuracy, the predicted values are compared with the valid DFT energies of the ML-relaxed systems.
+
+You can generate the comparison using the following command:
+
+```bash
+python analysis/parity_plot.py --pred_path <PATH_TO_PRED_RESULTS> \
+                               --save_dir <SAVE_DIRECTORY> \
+                               --mapping_file_path <PATH_TO_MAPPING_FILE> \
+                               --dft_target_path <PATH_TO_DFT_ENERGIES> \
+                               --model <MODEL_TYPE; gnoc or scn or escn>
+```
+
+- **OC20-Dense metadata file**: `oc20dense_mapping.pkl` [link](https://fair-chem.github.io/core/datasets/oc20dense.html)
+- **OC20-Dense OCP Challenge DFT energiees**: `ml_relaxed_dft_targets.pkl` [link](https://opencatalystproject.org/challenge.html)
+
+### 4-2. Section-wise Attention
 
 To extract section-wise attention from the model, use the `get_section_attention.py` script:
 
 ```bash
-python get_section_attention.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
+python analysis/get_section_attention.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_OUTPUT>
 ```
 
-## Extracting Text Encoder Embeddings for t-SNE Plot
+### 4-3. Extracting Text Encoder Embeddings for t-SNE Plot
 
 To obtain text encoder embeddings suitable for visualization with t-SNE plots, execute:
 
 ```bash
-python get_text_embedding.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
+python analysis/get_text_embedding.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO_CHECKPOINT> --save_path <PATH_TO_SAVE_EMBEDDINGS>
 ```
+
 
 ---
 
