@@ -6,7 +6,9 @@
 
 ![TOC_resized](https://github.com/hoon-ock/multi-view/assets/93333323/0ad53e44-18df-43a0-a413-1bc5438777e6)
 
-This repository is designed for running multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, and various prediction and analysis scripts related to the model's performance and outputs. Below are the instructions to effectively utilize this repository.
+This repository provides the tools for multimodal self-supervised learning (SSL) pretraining, text-only regression fine-tuning, as well as prediction and analysis scripts related to model performance and outputs.
+
+Below are the instructions to effectively use this repository.
 ---
 ## 1. Prerequisites
 
