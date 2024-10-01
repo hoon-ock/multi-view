@@ -24,7 +24,7 @@ This project requires the following packages:
 
 ### Preprocessing
 
-For detailed preprocessing steps, please refer to `data/README.md`.
+For detailed preprocessing steps, please refer to [`data/README.md`](data/README.md).
 
 ### Files
 The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data can be accessed through the following link: [Data](https://cmu.box.com/s/6d2zbi00yoizyg60ppztdgqiaes1msqw).
