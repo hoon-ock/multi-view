@@ -66,6 +66,7 @@ class StringGenerator():
                 cell = cell.Cell(pyg.cell.squeeze(0).numpy()),
                 pbc = True,
                 tags = pyg.tags)
+        # breakpoint()
 
         fixed_atom_indices = torch.nonzero(pyg.fixed == 1).squeeze().tolist()
         fix_atoms = constraints.FixAtoms(indices=fixed_atom_indices)
@@ -161,7 +162,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser = argparse.ArgumentParser()
     parser.add_argument('--lmdb_path', type=str, help='Path to the lmdb file', required=True)
-    parser.add_argument('--save_path', type=str, help='Path to save the strings', required=True)
+    parser.add_argument('--save_path', type=str, help='Path to save the strings', required=False, default='dense/')
     parser.add_argument('--metadata_path', type=str, help='Path to the metadata file', required=True)
     #parser.add_argument('--tag_path', type=str, help='Path to the tag file', required=True)
     parser.add_argument('--split', type=str, choices= ['train', 'val', 'eval', 'test'])  

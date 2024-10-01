@@ -30,7 +30,7 @@ class StringGenerator():
                 energy = pyg.y
                 save_name = id + '_' + str(frame) + '.pkl'
 
-            elif task == 'is2re':
+            elif task == 'is2re' or task == 'rs2re':
                 energy = pyg.y_relaxed
                 save_name = id + '.pkl'
             
@@ -46,7 +46,7 @@ class StringGenerator():
                            'interactions': interactions,
                            'string': string,
                            'energy': energy})
-            breakpoint()
+            # breakpoint()
             pickle.dump(result, open(self.save_path + save_name, 'wb'))
         
     
@@ -60,13 +60,23 @@ class StringGenerator():
                 cell=cell.Cell(pyg.cell.squeeze(0).numpy()),
                 pbc=True,
                 tags=pyg.tags)
+            
         elif task == 'is2re':
+            atoms = Atoms(
+                numbers = pyg.atomic_numbers,
+                positions = pyg.pos,
+                cell = cell.Cell(pyg.cell.squeeze(0).numpy()),
+                pbc = True,
+                tags = pyg.tags)
+        
+        elif task == 'rs2re':
             atoms = Atoms(
                 numbers = pyg.atomic_numbers,
                 positions = pyg.pos_relaxed,
                 cell = cell.Cell(pyg.cell.squeeze(0).numpy()),
                 pbc = True,
                 tags = pyg.tags)
+            # breakpoint()
 
         fixed_atom_indices = torch.nonzero(pyg.fixed == 1).squeeze().tolist()
         fix_atoms = constraints.FixAtoms(indices=fixed_atom_indices)
@@ -154,10 +164,10 @@ if __name__ == '__main__':
 
     parser = argparse.ArgumentParser()
     parser.add_argument('--lmdb_path', type=str, help='Path to the lmdb file', required=True)
-    parser.add_argument('--save_path', type=str, help='Path to save the strings', required=True)
+    parser.add_argument('--save_path', type=str, help='Path to save the strings', required=False, default='oc20/')
     parser.add_argument('--metadata_path', type=str, help='Path to the metadata file', required=True)
     # parser.add_argument('--tag_path', type=str, help='Path to the tag file', required=True)
-    parser.add_argument('--task', type=str, help='is2re or s2ef', required=True)    
+    parser.add_argument('--task', type=str, help='is2re or rs2re or s2ef', required=True)    
     args = parser.parse_args()
 
     lmdb_path = args.lmdb_path
