@@ -1,14 +1,12 @@
 import torch
 from torch.utils.data import DataLoader
 from dataset import RegressionDataset
-from model.models import RegressionModel
 from model.modules import TextEncoder
 import numpy as np
 import pandas as pd
 import os, yaml, pickle
-from transformers import RobertaTokenizerFast, RobertaModel
+from transformers import RobertaTokenizerFast
 import tqdm
-# Import your RegressionModel class, train_fn, and any other necessary modules
 
 # Define a function for making predictions
 def predict_fn(data_loader, model, device):
@@ -36,12 +34,9 @@ def get_embedding(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     if debug:
         device = "cpu"
     batch = 32
-    
     print("=============================================================")
     print(f"Generating embedding with {ckpt_name}")
     print("=============================================================")
-
-    
     # ========================= DATA LOADING =================================
     # Load train and validation data 
     df_test = pd.read_pickle(data_path)
@@ -54,7 +49,6 @@ def get_embedding(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # Initialize training dataset
     test_dataset = RegressionDataset(texts = df_test["text"].values,
                                       targets = df_test["target"].values,
-                                      chg_emb = df_test["chg_emb"].values,
                                       tokenizer = tokenizer,
                                       seq_len= tokenizer.model_max_length)
     # Create training dataloader
@@ -85,7 +79,7 @@ def get_embedding(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
 
     # ========================= PREDICTION ====================================
     predictions = predict_fn(test_data_loader, model, device)
-    #breakpoint()
+
     # ========================= SAVE PREDICTION ===============================
     if not os.path.exists(save_path):
         os.makedirs(save_path)
@@ -101,13 +95,11 @@ if __name__ == "__main__":
     import argparse
     from datetime import datetime
     parser = argparse.ArgumentParser(description="Script to get embeddings.")
-    
     parser.add_argument("--data_path", type=str, required=True, help="Path to the data file.")
     parser.add_argument("--pt_ckpt_dir_path", type=str, required=True, help="Path to the pretrained checkpoint directory.")
     parser.add_argument("--save_path", type=str, required=True, help="Path where to save the embeddings.")
     parser.add_argument("--tag", type=str, default=datetime.now().strftime("%y%m%d_%H%M%S"), help="Tag for the run, defaults to current date and time if not provided.")
     parser.add_argument("--debug", action="store_true", help="Enable debug mode if set.")
-    
     args = parser.parse_args()
     
     # Directly use the provided paths and tag
