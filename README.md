@@ -75,7 +75,7 @@ python regress_predict.py --data_path <PATH_TO_DATA> --pt_ckpt_dir_path <PATH_TO
 
 ## 4. Analysis 
 
-### 4-2. Test Prediction Comparison with Valid DFT Energies
+### 4-1. Test Prediction Comparison with Valid DFT Energies
 
 In the paper, test predictions are made on ML-relaxed structures. To assess their accuracy, the predicted values are compared with the valid DFT energies of the ML-relaxed systems.
 
