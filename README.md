@@ -134,12 +134,13 @@ If you use this work in your research, please cite two papers as follows:
 ```bibtex
 @misc{ock2024multimodal,
       title={Multimodal Language and Graph Learning of Adsorption Configuration in Catalysis}, 
-      author={Janghoon Ock and Rishikesh Magar and Akshay Antony and Amir Barati Farimani},
+      author={Janghoon Ock and Srivathsan Badrinarayanan and Rishikesh Magar and Akshay Antony and Amir Barati Farimani},
       year={2024},
       eprint={2401.07408},
       archivePrefix={arXiv},
-      primaryClass={cs.CE}
-      }
+      primaryClass={cs.CE},
+      url={https://arxiv.org/abs/2401.07408}, 
+}
 ```
 
 ```bibtex
