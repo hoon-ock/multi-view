@@ -19,7 +19,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
    - Number of catalyst atoms ≤ 72
 
    Use the following command to apply the number filter:
-
+   
    ```bash
    python input_prompts.py --data_path <PATH_TO_DATA>
    ```
@@ -49,7 +49,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
    python composition_filter.py --data_path <PATH_TO_DATA> --num_gens 3
    ```
 
-## 7. **Extract Energies**  
+## 6. **Extract Energies for Evaluation**  
    Run `extract_energies_new.py` using the following inputs:  
    - `oc20dense_train_rev.pkl`
    - `valid_cifs` directory
@@ -61,18 +61,18 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
    - `CIFS_for_conversion`  
    - `DFT_energies_reordered.csv`
 
-## 8. **Convert CIFs to Strings**  
+## 7. **Convert CIFs to Strings**  
    Run `CIF2string.py` on the `CIFS_for_conversion` directory to get inference strings. This will generate:  
    - `LLM_strings.csv`  
    - `LLM_strings.pkl`
 
-## 9. **Run CatBERTa Predictions**  
+## 8. **Run CatBERTa Predictions**  
    - Run CatBERTa on `LLM_strings.pkl` to obtain `preds_LLM_strings.pkl` (red).
    - Then, run CatBERTa on both `adsorbate_catalyst_GT_new_CC.pkl` and `adsorbate_catalyst_config_GT_new_CC.pkl` to get:  
      - `preds_adsorbate_catalyst_GT_new_CC.pkl` (black)  
      - `preds_adsorbate_catalyst_config_GT_new_CC.pkl` (green line)
 
-10. **Evaluate Predictions**  
+## 9. **Evaluate Predictions**  
     Finally, run `prediction_evaluation.py` on the three prediction files (`preds_LLM_strings.pkl`, `preds_adsorbate_catalyst_GT_new_CC.pkl`, `preds_adsorbate_catalyst_config_GT_new_CC.pkl`) along with `DFT_energies_reordered.csv` to evaluate the predictions.
 
 ---
