@@ -120,9 +120,9 @@ python analysis/get_text_embedding.py --data_path <PATH_TO_DATA> \
 
 ---
 
-## 5. Generation with Fine-tuned CrystaLLM
+## 5. Generation & Prediction with Fine-tuned CrystaLLM
 
-### 5-1. 
+For detailed preprocessing steps, please refer to [`generation/README.md`](generation/README.md).
 
 
 ---

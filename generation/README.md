@@ -1,4 +1,4 @@
-## Generating CIF Files Using the CrystaLLM Framework
+# Generating CIF Files Using the CrystaLLM Framework
 
 To generate CIF files using the fine-tuned CrystaLLM framework, follow these steps:
 
