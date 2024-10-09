@@ -50,31 +50,45 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
    ```
 
 ## 6. **Extract Energies for Evaluation**  
-   Run `extract_energies_new.py` using the following inputs:  
-   - `oc20dense_train_rev.pkl`
-   - `valid_cifs` directory
+   Run `extract_energies.py` using the file that contains label energies and the valid CIFs generated from the previous step. This step is essential for extracting energies for the Prediction Inclusion Ratio analysis. Ensure that the `data_path` contains the label DFT energies corresponding to the input prompts of the valid CIFs.
 
-   This will generate the following outputs:  
-   - `DFT_energies_new_CC.csv`  
-   - `adsorbate_catalyst_GT_new_CC.pkl`  
-   - `adsorbate_catalyst_config_GT_new_CC.pkl`  
-   - `CIFS_for_conversion`  
-   - `DFT_energies_reordered.csv`
+   This process will generate the following outputs:  
+   - `DFT_energies.csv`: Label DFT energies and configuration strings for each adsorbate-catalyst pair.
+   - `adsorbate_catalyst_GT.pkl`: A collection of unique adsorbate-catalyst pairs.
+   - `adsorbate_catalyst_config_GT.pkl`: All configurations for each adsorbate-catalyst pair.
+   - `CIFS_for_conversion`: CIFs prepared for CIF2String conversion.
+   - `DFT_energies_reordered.csv`: The same content as `DFT_energies.csv`, but reordered for indexing.
 
 ## 7. **Convert CIFs to Strings**  
-   Run `CIF2string.py` on the `CIFS_for_conversion` directory to get inference strings. This will generate:  
-   - `LLM_strings.csv`  
-   - `LLM_strings.pkl`
+   Run `CIF2string.py` to convert the CIFs stored in the `CIFS_for_conversion` directory, generated in the previous step, into strings for inference.
 
-## 8. **Run CatBERTa Predictions**  
-   - Run CatBERTa on `LLM_strings.pkl` to obtain `preds_LLM_strings.pkl` (red).
-   - Then, run CatBERTa on both `adsorbate_catalyst_GT_new_CC.pkl` and `adsorbate_catalyst_config_GT_new_CC.pkl` to get:  
-     - `preds_adsorbate_catalyst_GT_new_CC.pkl` (black)  
-     - `preds_adsorbate_catalyst_config_GT_new_CC.pkl` (green line)
+   ```bash
+   python CIF2string.py --cif_dir <PATH_TO_CIFs> --output_file_name <FILE_NAME>
+   ```
+   This will generate the CatBERTa input strings in two formats: CSV and PKL.
 
-## 9. **Evaluate Predictions**  
-    Finally, run `evaluation.py` on the three prediction files (`preds_LLM_strings.pkl`, `preds_adsorbate_catalyst_GT_new_CC.pkl`, `preds_adsorbate_catalyst_config_GT_new_CC.pkl`) along with `DFT_energies_reordered.csv` to evaluate the predictions.
+## 8. **Run CatBERTa Predictions & Evaluate Predictions**  
+   To obtain CatBERTa predictions using LLM-derived configuration strings, run predictions on the output pickle file generated from the previous step. These predictions correspond to the red "x" marks in Figure 5 of the paper.
+
+   To generate CatBERTa predictions based solely on adsorbate-catalyst pair information (without the LLM-derived configuration), run predictions on the `adsorbate_catalyst_GT.pkl` from step 6. These results correspond to the black "x" marks in Figure 5.
+
+   To obtain CatBERTa predictions using ground truth configuration strings, make predictions with the `adsorbate_catalyst_config_GT.pkl` from step 6. You can evaluate the intrinsic uncertainty of the CatBERTa predictions by calculating the standard deviation for each adsorbate-catalyst pair. These results are represented by the green lines in Figure 5.
+
+   The entire evaluation process can be executed by running `evaluation.py`:
+
+   ```bash
+   python evaluation.py --pred1 <PATH_TO_STRINGS_WO_CONFIGS> \
+                        --pred2 <PATH_TO_STRINGS_W_LLM_DERIVED_CONFIGS> \
+                        --pred3 <PATH_TO_STRINGS_W_GT_CONFIGS>
+   ```
+   - `--pred1`: Path to predictions without configuration strings.
+   - `--pred2`: Path to predictions with LLM-derived configuration strings.
+   - `--pred3`: Path to predictions with ground truth configuration strings.  
 
 ---
 
 With these steps, you will successfully generate and evaluate CIF files using the CrystaLLM framework.
+
+# Inquiries
+
+For any questions or further information, please reach out to [srivathb@andrew.cmu.edu](mailto:srivathb@andrew.cmu.edu) or [jock@andrew.cmu.edu](mailto:jock@andrew.cmu.edu).

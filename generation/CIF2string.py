@@ -257,10 +257,12 @@ def create_pkl_files(csv_file, pkl_file2):
     with open(pkl_file2, 'wb') as file2:
         pkl.dump(data, file2)
 
-def main():
-    input_folder = 'CIFS_for_conversion'
-    output_file = 'LLM_strings.csv'
-    output_pkl = 'LLM_strings.pkl'
+def cif2string(input_folder, output_file_name):
+    # input_folder = 'CIFS_for_conversion'
+    # output_file = 'LLM_strings.csv'
+    # output_pkl = 'LLM_strings.pkl'
+    output_file = output_file_name + '.csv'
+    output_pkl = output_file_name + '.pkl'
 
     with open(output_file, mode='w', newline='') as file:
         writer = csv.writer(file)
@@ -277,4 +279,11 @@ def main():
     #os.remove(output_file)
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--cif_dir", type=str, required=True, help="Path to the folder containing CIF files.")
+    parser.add_argument("--output_file_name", type=str, required=True, help="Path to the output pickle, CSV file.")
+    args = parser.parse_args()
+
+
+    cif2string(args.cif_dir, args.output_file_name)

@@ -118,12 +118,18 @@ python analysis/get_text_embedding.py --data_path <PATH_TO_DATA> \
                                       --save_path <PATH_TO_SAVE_EMBEDDINGS>
 ```
 
+---
+
+## 5. Generation with Fine-tuned CrystaLLM
+
+### 5-1. 
+
 
 ---
 
 ## Inquiries
 
-For any questions or further information, please reach out to [jock@andrew.cmu.edu](mailto:jock@andrew.cmu.edu).
+For any questions or further information, please reach out to [jock@andrew.cmu.edu](mailto:jock@andrew.cmu.edu) or [srivathb@andrew.cmu.edu](mailto:srivathb@andrew.cmu.edu).
 
 ---
 

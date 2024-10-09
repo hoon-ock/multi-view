@@ -210,12 +210,12 @@ def reorder_csv_file(csv_file, cifs_for_conversion_dir, output_csv_reordered):
 # reorder_pkl_files('pkl_file1.pkl', 'pkl_file2.pkl', 'CIFS_for_conversion')
 # reorder_csv_file('output.csv', 'CIFS_for_conversion', 'reordered_output.csv')
 
-def main():
-    pkl_file = 'oc20dense_train_rev.pkl'
-    cif_folder = 'valid_cifs'
-    output_csv = 'DFT_energies_new_CC.csv'
-    pkl_file1 = 'adsorbate_catalyst_GT_new_CC.pkl'
-    pkl_file2 = 'adsorbate_catalyst_config_GT_new_CC.pkl'
+def extract_energies(pkl_file, cif_folder='valid_cifs'):
+    #pkl_file = 'oc20dense_train_rev.pkl'
+    #cif_folder = 'valid_cifs'
+    output_csv = 'DFT_energies.csv'
+    pkl_file1 = 'adsorbate_catalyst_GT.pkl'
+    pkl_file2 = 'adsorbate_catalyst_config_GT.pkl'
     cifs_for_conversion_dir = 'CIFS_for_conversion'
     reordered_output_csv = 'DFT_energies_reordered.csv'
 
@@ -234,4 +234,9 @@ def main():
     print(f"Number of .cif files in cifs_for_conversion_dir directory: {len(cif_files_new)}")
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--data_path", type=str, required=True, help="Path to the inference data file.")
+    parser.add_argument("--cif_dir", type=str, default='valid_cifs', help="Path to the directory containing valid CIF files.")
+    args = parser.parse_args()
+    extract_energies(args.data_path, args.cif_dir)

@@ -157,11 +157,11 @@ def plot_energies_with_threshold(df, preds1, preds2, preds3):
 
 
 # Main script
-def main():
+def evaluate(preds1_path, preds2_path, preds3_path):
     file_path = 'DFT_energies_reordered.csv'  # Update with your file path
-    preds1_path = 'preds_adsorbate_catalyst_GT_new_CC.pkl'  # Update with your file path
-    preds2_path = 'preds_LLM_strings.pkl'   # Update with your file path
-    preds3_path = 'preds_adsorbate_catalyst_config_GT_new_CC.pkl'
+    # preds1_path = 'preds_adsorbate_catalyst_GT.pkl'  # Update with your file path
+    # preds2_path = 'preds_LLM_strings.pkl'   # Update with your file path
+    # preds3_path = 'preds_adsorbate_catalyst_config_GT.pkl'
 
     # file_path = 'DFT_energies.csv'  # Update with your file path
     # preds1_path = 'preds_adsorbate_catalyst_GT.pkl'  # Update with your file path
@@ -182,6 +182,12 @@ def main():
     plot_energies_with_threshold(df, preds1_data, preds2_data, preds3_data)
 
 if __name__ == "__main__":
-    main()
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--pred1", type=str, required=True, help="Path to the inferences on adsorbate-catalyst pair string without configuration part.")
+    parser.add_argument("--pred2", type=str, required=True, help="Path to the inferences on strings with LLM-derived configurations.")
+    parser.add_argument("--pred3", type=str, required=True, help="Path to the inference on strings with ground truth configuration parts.")
+    args = parser.parse_args()
+    evaluate(args.pred1, args.pred2, args.pred3)
 
 
