@@ -73,7 +73,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
      - `preds_adsorbate_catalyst_config_GT_new_CC.pkl` (green line)
 
 ## 9. **Evaluate Predictions**  
-    Finally, run `prediction_evaluation.py` on the three prediction files (`preds_LLM_strings.pkl`, `preds_adsorbate_catalyst_GT_new_CC.pkl`, `preds_adsorbate_catalyst_config_GT_new_CC.pkl`) along with `DFT_energies_reordered.csv` to evaluate the predictions.
+    Finally, run `evaluation.py` on the three prediction files (`preds_LLM_strings.pkl`, `preds_adsorbate_catalyst_GT_new_CC.pkl`, `preds_adsorbate_catalyst_config_GT_new_CC.pkl`) along with `DFT_energies_reordered.csv` to evaluate the predictions.
 
 ---
 
