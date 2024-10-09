@@ -52,7 +52,6 @@ class StringGenerator():
                            'interactions': interactions,
                            'string': string,
                            'energy': energy})
-            # breakpoint()
             pickle.dump(result, open(self.save_path + '/' + save_name, 'wb'))
         
     

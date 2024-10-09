@@ -18,14 +18,14 @@ In the paper, OC20-Dense datasets for [OCP 2023 Challenge](https://opencatalystp
 
 
 ### Note:
-- **OC20 IS2RE LMDB files**: Contain relaxed positions.
+- **OC20 IS2RE LMDB files**: Contain relaxed positions as `pos_relaxed` attribute.
 - **OC20-Dense IS2RE LMDB files**: Do not contain relaxed positions. To extract relaxed positions for the OC20-Dense dataset, an additional step is required.
 
 ---
 
 ## LMDB Creation with Relaxed Frames (OC20-Dense)
 
-To create an LMDB file with the relaxed positions for the OC20-Dense dataset:
+We created a new LMDB using relaxed structures from publicly available trajectory files, and then sampled the training set from it. To create an LMDB file with the relaxed positions for the OC20-Dense dataset:
 
 ```bash
 python relaxed_frame_lmdb.py --mapping_file_path <PATH_TO_MAPPING_FILE> \
