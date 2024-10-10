@@ -14,6 +14,8 @@ Below are the instructions to effectively use this repository.
 
 ## 1. Prerequisites
 
+**Note:** 🚧 This section is currently under construction and will be updated soon.
+
 Before you begin, ensure you have met the following requirements:
 
 - Python 3.6 or above (Recommended: Python 3.8)
