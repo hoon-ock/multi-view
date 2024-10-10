@@ -79,7 +79,7 @@ def run_prediction(data_path, pt_ckpt_dir_path, save_path, tag, debug=False):
     # ========================= SAVE PREDICTION ===============================
     if not os.path.exists(save_path):
         os.makedirs(save_path)
-    save_path = os.path.join(save_path, f"ssl-reg-{ckpt_name}-{tag}-strc.pkl")
+    save_path = os.path.join(save_path, f"{ckpt_name}-{tag}-strc.pkl")
     
     ## save as dictionary where key is id in df_test, and values are predictions
     predictions_dict = dict(zip(df_test["id"].values, predictions))
