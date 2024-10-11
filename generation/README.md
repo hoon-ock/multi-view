@@ -17,7 +17,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
 ### 1-2. **Prerequisites**
    Follow the setup instructions provided in the forked repository to get the CrystaLLM framework up and running. After setup, download the pre-trained model checkpoints from the [original repository](https://github.com/lantunes/CrystaLLM) and place them in the appropriate directory (`<PATH_TO_CHECKPOINT>`).
 
-   You can download our training data and checkpoints from this link: [link]().
+   You can download our training data and checkpoints from this link: [link](https://doi.org/10.6084/m9.figshare.27208356.v1). Find the `gen_data` and `gen_checkpoint` directory.
 
 ---
 
