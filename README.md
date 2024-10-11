@@ -35,7 +35,7 @@ This project requires the following packages:
 For detailed preprocessing steps, please refer to [`data/README.md`](data/README.md).
 
 ### 2-2. Data Files & Checkpoint
-The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data and checkpoints can be accessed through the following link: [Data](https://doi.org/10.6084/m9.figshare.27208356.v1).
+The dataset required for training and prediction includes equiformer embeddings and text strings from catberta. This data and checkpoints can be accessed through the following link: [Data](https://doi.org/10.6084/m9.figshare.27208356.v2).
 
 Please download and place the data in the appropriate directory and update the data/checkpoints paths in the YAML files.
 

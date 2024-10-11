@@ -12,7 +12,7 @@ The original datasets for OC20 and OC20-Dense can be accessed from the following
 - [Challenge OC20-Dense Dataset](https://opencatalystproject.org/challenge.html)
 - **ML-relaxed Test set**: gemnet-oc (`gemnet_oc_2M_oc20dense_val_ood.tar.gz`), scn (`scn_2M_oc20dense_val_ood.tar.gz`), escn (`escn_2M_oc20dense_val_ood.tar.gz`)
 
-The preprocessed data and checkpoints can be accessed through the following link: [Data](https://doi.org/10.6084/m9.figshare.27208356.v1). Find the `pred_data` and `pred_checkpoint` directory.
+The preprocessed data and checkpoints can be accessed through the following link: [Data](https://doi.org/10.6084/m9.figshare.27208356.v2). Find the `pred_data` and `pred_checkpoint` directory.
 
 ### Note:
 - **OC20 IS2RE LMDB files**: Contain relaxed positions as `pos_relaxed` attribute.
