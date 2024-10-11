@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/703082841.svg)](https://doi.org/10.5281/zenodo.13917199)
 # Multimodal Graph and Language Learning for Adsorption Configuration in Catalysis
 [arXiv Preprint](https://arxiv.org/abs/2401.07408)
 
