@@ -42,7 +42,6 @@ def obtain_preds_and_labels(pred, model, mapping_file_path, dft_target_path):
     for key, value in tqdm.tqdm(pred.items()):
         
         sid = int(key.split('_')[0])
-
         system_id = oc20dense_mapping[sid]['system_id']
         config_id = oc20dense_mapping[sid]['config_id']
         label = dft[system_id][config_id]
@@ -51,7 +50,6 @@ def obtain_preds_and_labels(pred, model, mapping_file_path, dft_target_path):
             continue
         labels.append(label)
         preds.append(value)
-    #breakpoint()
     return np.array(preds), np.array(labels)
 
 
