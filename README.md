@@ -3,7 +3,13 @@
 # Multimodal Graph and Language Learning for Adsorption Configuration in Catalysis
 [arXiv Preprint](https://arxiv.org/abs/2401.07408)
 
-**Important Note:** This repository is currently in the process of being cleaned up for better organization and usability. The cleanup will be completed before the publication of the associated paper. We appreciate your patience and understanding.
+## **Important Note**
+
+This repository is currently being updated to fix issues and improve its organization and usability. The anticipated timeline for completing this update is within **December**. We are also working to ensure the repository aligns with the publication of the associated paper.
+
+We appreciate your patience and understanding as we work to enhance the repository. Thank you for your support!
+
+---
 
 
 ![TOC_resized](https://github.com/hoon-ock/multi-view/assets/93333323/0ad53e44-18df-43a0-a413-1bc5438777e6)
