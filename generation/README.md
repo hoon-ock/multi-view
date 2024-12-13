@@ -1,3 +1,13 @@
+## 🚨 **Important Note** 🚨
+
+⚠️ **This repository is currently being updated** to fix issues and improve its organization and usability. 
+
+📅 **Anticipated Update Timeline:** **Before Christmas (12/25)**.
+
+📝 We are also working to ensure the repository aligns with the publication of the associated paper. 
+
+💡 _We appreciate your patience and understanding as we enhance the repository. Thank you for your support!_
+
 # Generating CIFs Using the CrystaLLM Framework
 
 To generate CIF files using the fine-tuned CrystaLLM framework, follow these steps:
