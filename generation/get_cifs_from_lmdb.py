@@ -1,4 +1,3 @@
-from concurrent.futures import ThreadPoolExecutor, as_completed
 import ase.io 
 from ase import Atoms, cell, constraints
 import torch
@@ -9,13 +8,11 @@ import os, glob, tqdm
 import argparse
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--subset_num", type=int, default=None)
-parser.add_argument("--lmdb_path", type=str, default="/home/jovyan/shared-scratch/jhoon/ocp2023/lmdb/oc20dense-val/data.lmdb")
-parser.add_argument("--save_dir_path", type=str, default="/home/jovyan/shared-scratch/jhoon/latent/cifs/val/dense-raw")
+parser.add_argument("--lmdb_path", type=str) #, default="/home/jovyan/shared-scratch/jhoon/ocp2023/lmdb/oc20dense-val/data.lmdb")
+parser.add_argument("--save_dir_path", type=str) #, default="/home/jovyan/shared-scratch/jhoon/latent/cifs/val/dense-raw")
 parser.add_argument("--num_workers", type=int, default=4)
 args = parser.parse_args()
 
-subset_num = args.subset_num
 lmdb_path = args.lmdb_path
 save_dir_path = args.save_dir_path
 num_workers = args.num_workers
