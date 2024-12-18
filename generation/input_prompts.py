@@ -6,6 +6,7 @@ from collections import Counter
 from ase.io import read
 from ase import Atoms
 import shutil
+import pandas as pd
 
 def count_elements(string):
     ase_atoms = Atoms(string)
@@ -44,9 +45,12 @@ def process_and_filter_data(data, max_adsorbate_elements, max_adsorbate_atoms, m
     return filtered_data
 
 def extract_second_lines(pkl_path):
-    with open(pkl_path, 'rb') as f:
-        txt_files = pickle.load(f)
-    
+    try:
+        with open(pkl_path, 'rb') as f:
+            txt_files = pickle.load(f)
+    except:
+        txt_files = pd.read_pickle(pkl_path)
+
     second_lines = []
     for filename, content in txt_files:
         lines = content.split('\n')
@@ -55,7 +59,7 @@ def extract_second_lines(pkl_path):
         else:
             second_line = ""
         second_lines.append(second_line)
-    
+
     return second_lines
 
 def extract_input_prompts(pkl_path):
