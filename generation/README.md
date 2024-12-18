@@ -48,6 +48,11 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
 
    Then, zip them to create `pkl.gz` format.
 
+   ```bash
+   python bin/prepare_custom.py <PATH_TO_CIFS> <PATH_TO_TAR_GZ (SAVE_PATH)>
+   python bin/tar_to_pickle.py <PATH_TO_TAR_GZ> <PATH_TO_PKL_GZ (SAVE_PATH)>
+   ```
+
 ### 2-2. **Custom Preprocessing**
    Instead of using the original CrystaLLM format, we adapted a CatBERTa-compatible input string as the initial prompt for the CIFs.
 
@@ -71,7 +76,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
 
    Refer to [`data/README.md`](../data/README.md) for more details.
    - **OC20 metadata file**: `oc20_data_mapping.pkl`
-   - **OC20-Dense metadata file**: `oc20dense_mapping.pkl`
+   - **OC20-Dense metadata file**: `generation/oc20dense_text_meta.pkl` (CatBERTa strings are merged together to serve as metadata)
 
 ### 2-3. **Initial Input Prompt Set Generation**
    To generate the input prompts for adsorbate-catalyst pairs (e.g., `data_NO</s>Y8Pb24 (2 1 1)`), run `input_prompts.py` on the preprocessed `pkl.gz` file from the previous step. This will produce the `input_prompts.tar.gz` file containing the formatted input prompts.
