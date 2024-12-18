@@ -15,7 +15,11 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
 ## 1. **Setup**
 
 ### 1-1. **Clone the Forked Repository**  
-   Begin by cloning the [forked/modified CrystaLLM repository](https://github.com/hoon-ock/CrystaLLM/tree/adslab).
+   Begin by cloning the `adslab` branch of [forked/modified CrystaLLM repository](https://github.com/hoon-ock/CrystaLLM/tree/adslab).
+
+   ```bash
+   git clone --branch adslab https://github.com/hoon-ock/CrystaLLM.git
+   ```
 
    This repository is based on commit `666c7f0` of the [original CrystaLLM repository](https://github.com/lantunes/CrystaLLM/tree/main).
 

@@ -35,8 +35,12 @@ Before you begin, ensure you have met the following requirements:
 
 This project requires the following packages:
 
-- `torch==1.11.0`
-- `transformers==4.38.2`
+- `torch==2.5.1`
+- `transformers==4.47.1`
+- `tokenizers==0.21.0`
+- `pandas==2.2.3`
+- `pydantic==2.10.3`
+- `tqdm`, `wandb`
 
 ---
 
