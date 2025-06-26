@@ -23,7 +23,7 @@ To generate CIF files using the fine-tuned CrystaLLM framework, follow these ste
 
    You can download our training data and checkpoints from this link: [link](https://doi.org/10.6084/m9.figshare.27208356.v2). Find the `gen_data` and `gen_checkpoint` directory.
 
-   **Note**: We have noticed an issue with the generation checkpoint download. This checkpoint issue will be resolved before July 4th, 2025.
+   > **⚠️ IMPORTANT NOTE**: We have noticed an issue with the generation checkpoint download. This checkpoint issue will be resolved before **July 4th, 2025**. ⚠️
 
 ---
 
